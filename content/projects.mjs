@@ -2,13 +2,12 @@
 // Keep unavailable reports null until a matching source is supplied.
 export const projects = [
   {
-    slug: "multilingual-math", title: "Multilingual math reasoning", category: "Synthetic data", badge: "CSV dataset", section: "projects",
+    slug: "multilingual-math", title: "Multilingual math reasoning", category: "Synthetic data", section: "projects",
     summary: "Synthetic data generation for SFT in local African languages (Igbo, Hausa, and Yoruba), with evaluation to identify harder maths questions.",
     report: null,
     links: [{ label: "Explore the CSV dataset", href: "https://huggingface.co/datasets/dayveedd/gsm8k-lowres-math" }],
     body: `<p>This project uses synthetic data generation to build a supervised fine-tuning (SFT) resource for mathematical reasoning in local African languages (Igbo, Hausa, and Yoruba). It combines translated GSM8K questions, model evaluation, and difficulty filtering to produce a CSV dataset and a harder test split.</p>
       <h2>Synthetic data generation</h2><p><strong>GPT-5.5, through the Codex CLI, generated the main published dataset.</strong> It batch-translated GSM8K’s full training and test sets—7,473 training questions and 1,319 test questions—into all three languages, retaining the original numeric answers as ground truth.</p>
-      <p>Earlier, smaller Igbo/Yoruba runs used <strong>Tencent HY3</strong> through a PostgreSQL/OpenRouter translation pipeline. That earlier slice was later used to evaluate Qwen. GPT-5.5 and HY3 were the translators; Qwen and Tiny Aya were used only to solve the translated questions.</p>
       <h2>Evaluating the translations</h2><p>The harness scores three instruction-tuned solvers: <strong>Qwen2.5-1.5B-Instruct</strong> using vLLM on NVIDIA hardware, and <strong>Tiny Aya Global</strong> and <strong>Tiny Aya Earth</strong> using MLX on Apple Silicon. Their role is to measure mathematical reasoning on the generated data.</p>
       <h2>Exact-match scoring</h2><p>Let <var>y</var><sub>i</sub> be the gold numeric answer and <var>ŷ</var><sub>i</sub> the prediction extracted from the last <code>####</code> answer marker. A missing marker counts as incorrect, even if the correct number appears elsewhere in the response.</p>
       <p>Both values are numerically normalized: dollar signs, grouping commas, and wrapping punctuation are removed, and fractions are evaluated, so <code>1/2</code> and <code>0.5</code> are equivalent. Set <var>c</var><sub>i</sub> = 1 when a prediction exists and the normalized values match exactly; otherwise, <var>c</var><sub>i</sub> = 0. Accuracy over a set <var>S</var> is:</p>
