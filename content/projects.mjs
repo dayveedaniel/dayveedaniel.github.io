@@ -30,7 +30,7 @@ export const projects = [
       <p>This summary reflects the contributions listed in my résumé. Performance measurements and a detailed technical report are not yet available here.</p>`
   },
   {
-    slug: "ecg-benchmarking", title: "ECG data pipeline for benchmarking", category: "MSc thesis · Data engineering", section: "projects",
+    slug: "ecg-benchmarking", title: "ECG data pipeline for benchmarking", category: "Data engineering", badge: "MSc thesis", section: "projects",
     summary: "Collecting, cleaning, and standardizing heterogeneous ECG datasets into a common representation for detector benchmarking.",
     report: { source: "Thesis_final.pdf", file: "ecg-msc-thesis.pdf", label: "MSc thesis (PDF)" },
     body: `<p>ECG datasets arrive with different file formats, sampling rates, units, and annotation conventions. Before atrial-fibrillation detectors can be compared consistently, those differences need to be resolved. My MSc thesis contribution was the data pipeline that collects, cleans, and turns these heterogeneous sources into a common, auditable representation.</p>

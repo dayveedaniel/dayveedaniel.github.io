@@ -14,10 +14,11 @@ const template = await readFile(resolve(root, "site/index.html"), "utf8");
 const origin = new URL(template.match(/rel="canonical" href="([^"]+)"/)[1]).origin;
 const escape = (value) => value.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 const articlePath = (project) => `/${project.section}/${project.slug}/`;
+const badge = (project) => project.badge ? ` <span class="project-badge">${escape(project.badge)}</span>` : "";
 const entries = (section) => projects.filter((project) => project.section === section).map((project, index) => `
   <article class="entry">
     <span class="entry-index">${String(index + 1).padStart(2, "0")}</span>
-    <div><h3><a href="${articlePath(project)}">${escape(project.title)}</a></h3><p>${escape(project.summary)}</p></div>
+    <div><h3><a href="${articlePath(project)}">${escape(project.title)}</a>${badge(project)}</h3><p>${escape(project.summary)}</p></div>
     <div class="entry-side"><span>${escape(project.category)}</span><a href="${articlePath(project)}" aria-label="Read ${escape(project.title)}">Read article ↗</a></div>
   </article>`).join("\n");
 
@@ -68,7 +69,7 @@ for (const project of projects) {
         <a class="back-link" href="/#${project.section}">← All ${section.toLowerCase()}</a>
         <header class="article-header">
           <p class="article-meta">${escape(project.category)} · ${Math.max(1, Math.ceil(words / 220))} min read</p>
-          <h1>${title}</h1>
+          <h1>${title}${badge(project)}</h1>
           <p class="article-deck">${escape(project.summary)}</p>
           <div class="article-resources">${resources}</div>
           ${report?.manuscript ? `<p class="article-note">${escape(report.note ?? "LaTeX manuscript source; a compiled PDF is not yet available.")}</p>` : ""}
