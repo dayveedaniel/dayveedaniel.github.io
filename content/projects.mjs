@@ -14,6 +14,7 @@ export const projects = [
   {
     slug: "nanotitan", title: "nanoTitan", category: "PyTorch · MoE", section: "projects",
     summary: "Attention and normalization improvements for an open-source mixture-of-experts stack.", report: null,
+    links: [{ label: "Read Israel Adewuyi’s write-up", href: "https://israel-adewuyi.github.io/blog/2026/distributed/" }],
     body: `<p>This contribution focused on the building blocks inside nanoTitan, an open-source mixture-of-experts stack. The work covered attention computation, projection layers, and normalization.</p>
       <h2>What I changed</h2><p>I added PyTorch scaled dot-product attention (SDPA), with an eager fallback, along with fused query, key, and value projections and RMSNorm. These changes work at the model implementation level, where the choice of attention path and tensor operations shapes how a model runs.</p>
       <h2>Implementation focus</h2><p>The fallback preserves an alternative attention path alongside SDPA. Fusing QKV projections brings the three attention projections into a shared operation, while RMSNorm changes how activations are normalized.</p>
