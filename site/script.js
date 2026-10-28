@@ -55,12 +55,16 @@ navigationLinks.forEach((link) => {
 
 window.addEventListener("scroll", requestSectionUpdate, { passive: true });
 window.addEventListener("resize", requestSectionUpdate);
-window.addEventListener("load", updateActiveSection);
 
-if (window.location.hash && document.querySelector(window.location.hash)) {
-  setActiveSection(window.location.hash.slice(1));
-} else {
-  updateActiveSection();
-}
+const syncSectionFromLocation = () => {
+  const sectionId = window.location.hash.slice(1);
+  const hashMatchesSection = sections.some((section) => section.id === sectionId);
+  if (hashMatchesSection) setActiveSection(sectionId);
+  else updateActiveSection();
+};
+
+window.addEventListener("load", syncSectionFromLocation);
+window.addEventListener("hashchange", syncSectionFromLocation);
+syncSectionFromLocation();
 
 document.querySelector("[data-year]").textContent = new Date().getFullYear();
