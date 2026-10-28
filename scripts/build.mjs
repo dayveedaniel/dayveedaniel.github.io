@@ -35,10 +35,11 @@ for (const project of projects) {
   const title = escape(project.title);
   const section = project.section === "research" ? "Research" : "Projects";
   const report = project.report;
-  if (report) await cp(resolve(root, "reports", report.source), resolve(output, "reports", report.file));
-  const resources = [report
-    ? `<a href="/reports/${report.file}" download>Download ${report.manuscript ? "manuscript (.tex)" : "report (PDF)"} ↓</a>`
-    : '<span class="report-unavailable">Report not yet available</span>',
+  const reports = [report, ...(project.additionalReports ?? [])].filter(Boolean);
+  for (const file of reports) await cp(resolve(root, "reports", file.source), resolve(output, "reports", file.file));
+  const resources = [
+    ...(reports.length ? reports.map((file) => `<a href="/reports/${file.file}" download>Download ${escape(file.label ?? (file.manuscript ? "manuscript (.tex)" : "report (PDF)"))} ↓</a>`)
+      : ['<span class="report-unavailable">Report not yet available</span>']),
     ...(project.links ?? []).map((link) => `<a href="${escape(link.href)}" target="_blank" rel="noreferrer">${escape(link.label)} ↗</a>`)
   ].join("\n");
   const words = project.body.replace(/<[^>]*>/g, " ").split(/\s+/).length;
@@ -82,6 +83,17 @@ for (const project of projects) {
   const directory = resolve(output, project.section, project.slug);
   await mkdir(directory, { recursive: true });
   await writeFile(resolve(directory, "index.html"), page);
+  // Keep bookmarked article URLs working on any static host.
+  for (const alias of project.aliases ?? []) {
+    const aliasDirectory = resolve(output, project.section, alias);
+    await mkdir(aliasDirectory, { recursive: true });
+    await writeFile(resolve(aliasDirectory, "index.html"), `<!doctype html>
+<html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>${title} — Daniel David</title><meta name="robots" content="noindex" />
+<link rel="canonical" href="${origin}${articlePath(project)}" />
+<meta http-equiv="refresh" content="0;url=${articlePath(project)}" /></head>
+<body><p>This article has moved to <a href="${articlePath(project)}">${title}</a>.</p></body></html>`);
+  }
 }
 
 await writeFile(resolve(output, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>

@@ -40,29 +40,18 @@ export const projects = [
       <p class="article-note">Team project with Kelvin Asu Ekuri, Danil Afonchikov, and Dadakhon Turgunboev.</p>`
   },
   {
-    slug: "llm-project", title: "LLM Project — Query-enhanced RAG", category: "LLMs · Retrieval", section: "projects",
-    summary: "A local RAG system that rewrites questions, retrieves relevant passages, and generates grounded answers.",
-    report: { source: "LLM_course_project.pdf", file: "llm-project.pdf" },
+    slug: "advanced-agentic-ai", title: "Agent-inspired RAG", category: "LLMs · Retrieval", section: "projects",
+    aliases: ["llm-project"],
+    summary: "A local knowledge assistant with query rewriting, hybrid retrieval, and evidence-based answer generation.",
+    report: { source: "AAI Project_report with gitlink.pdf", file: "advanced-agentic-ai.pdf", label: "Agent-inspired RAG report (PDF)" },
+    additionalReports: [{ source: "LLM_course_project.pdf", file: "llm-project.pdf", label: "Query-enhanced RAG report (PDF)" }],
     links: [{ label: "View the code", href: "https://github.com/dayveedaniel/intelligent_RAG_system" }],
-    body: `<p>A useful knowledge assistant has to find the right evidence before it can answer well. Our LLM course project explores that retrieval problem with a fully local prototype: improve the user's question, retrieve relevant passages, and generate an answer from the retrieved context.</p>
-      <h2>How it works</h2><p>The data pipeline collects Wikipedia articles about artificial intelligence, cleans them, and splits them into chunks. MiniLM converts the text into 384-dimensional embeddings. The retrieval layer combines semantic similarity with lexical matching, including n-gram and fuzzy matching, to handle both broad concepts and specific terms.</p>
-      <p>Gemma 4B, running through Ollama, reformulates the question before retrieval and produces the final answer from the selected passages. FastAPI exposes the search services, while a Flutter desktop interface shows the rewritten query, ranked context, and response with source attribution. Embeddings are stored locally in JSON with incremental updates.</p>
-      <h2>What we evaluated</h2><p>The report describes a corpus of 2,847 articles, split into 8,431 chunks, and a set of 100 factual, conceptual, comparative, and technical queries. Wikipedia acts as a stand-in for company documents. The evaluation discusses retrieval and answer behavior, but does not provide a numerical ablation establishing the benefit of query rewriting.</p>
-      <h2>How this differs from Advanced Agentic AI</h2><p>This article focuses on the LLM pipeline: query reformulation, hybrid retrieval, and grounded generation. The <a href="/projects/advanced-agentic-ai/">Advanced Agentic AI project</a> uses the same local stack and repository, but examines those stages as agents with separate responsibilities.</p>
-      <p>Scaling beyond JSON storage, handling conflicting contexts, and reducing prompt sensitivity are open engineering questions.</p>
-      <p class="article-note">Team project with Kelvin Asu Ekuri and Danil Afonchikov.</p>`
-  },
-  {
-    slug: "advanced-agentic-ai", title: "Advanced Agentic AI — Agent-inspired RAG", category: "Agent design · RAG", section: "projects",
-    summary: "The agent-oriented view of the RAG system: separate query, retrieval, and synthesis responsibilities.",
-    report: { source: "AAI Project_report with gitlink.pdf", file: "advanced-agentic-ai.pdf" },
-    links: [{ label: "View the code", href: "https://github.com/dayveedaniel/intelligent_RAG_system" }],
-    body: `<p>This project asks a different question about a familiar retrieval pipeline: how can we organize a knowledge assistant around clearly defined responsibilities? The Advanced Agentic AI report frames the system as three cooperating stages—a Query Agent, a Retrieval Agent, and a Synthesis Agent.</p>
-      <h2>Three responsibilities</h2><p>The Query Agent interprets intent and reformulates the question to match the collection's vocabulary. The Retrieval Agent selects relevant evidence through semantic, lexical, or hybrid search; the report describes adjusting the balance between those signals to suit the query. The Synthesis Agent prepares the context and integrates the evidence into an answer.</p>
-      <p>These stages run sequentially with shared context. The implementation uses Gemma 4B through Ollama, MiniLM embeddings, a local JSON store, FastAPI, and a Flutter interface.</p>
-      <h2>A shared foundation, a different emphasis</h2><p>The <a href="/projects/llm-project/">LLM Project</a> and this project share their repository, Wikipedia corpus, and underlying local RAG stack. The LLM report concentrates on query improvement and answer generation. This report concentrates on the responsibilities, decisions, and coordination of the three agent-inspired modules.</p>
-      <h2>What the project demonstrates</h2><p>The report assesses this design using the same 2,847-article corpus and 100-query set. Its evaluation is primarily qualitative, examining how the modules contribute to the overall workflow. It does not establish a measured performance advantage over a conventional RAG baseline.</p>
-      <p>The implemented design is a sequential pipeline. Dynamic agent spawning and meta-reasoning are proposed extensions, rather than completed capabilities. That distinction is central to understanding what “agentic” means in this project.</p>
+    body: `<p>A useful knowledge assistant needs to find the right evidence before it can answer well. Our team built a fully local retrieval-augmented generation system that improves a question, finds relevant passages, and generates an answer grounded in that context.</p>
+      <h2>From question to answer</h2><p>The workflow separates three responsibilities. The Query Agent interprets intent and reformulates the question. The Retrieval Agent combines semantic similarity with lexical matching to find evidence. The Synthesis Agent prepares the context and integrates the selected passages into an answer.</p>
+      <p>Gemma 4B runs locally through Ollama, while MiniLM produces 384-dimensional text embeddings. The retrieval pipeline includes n-gram and fuzzy matching, with embeddings stored in JSON and updated incrementally. FastAPI exposes the services, and a Flutter desktop interface shows the rewritten query, retrieved passages, and answer with source attribution.</p>
+      <h2>What we evaluated</h2><p>We used 2,847 Wikipedia articles about artificial intelligence, split into 8,431 chunks, and a set of 100 factual, conceptual, comparative, and technical queries. Wikipedia serves as a stand-in for company documents. The reports discuss retrieval and answer behavior primarily qualitatively; they do not establish a numerical advantage over a conventional RAG baseline.</p>
+      <h2>One system, two perspectives</h2><p>The two reports document the same repository and local stack. One focuses on query rewriting and grounded generation; the other explains the responsibilities and coordination of the agent-inspired stages.</p>
+      <p>The implemented workflow is sequential. Dynamic agent spawning and meta-reasoning remain proposed extensions. Scaling beyond JSON storage and reducing prompt sensitivity are further engineering questions.</p>
       <p class="article-note">Team project with Kelvin Asu Ekuri and Danil Afonchikov.</p>`
   },
   {
@@ -112,7 +101,7 @@ export const projects = [
   {
     slug: "software-metrics", title: "Selecting software-engineering metrics", category: "Published · Springer 2026", section: "research",
     summary: "Finding a smaller set of metrics while preserving the geometric relationships in the original data.",
-    report: { source: "AMSTA25-21.tex", file: "software-metrics.tex", manuscript: true, note: "The download is the LaTeX manuscript source. The published chapter is available through Springer." },
+    report: { source: "AMSTA25-21/AMSTA25-21.tex", file: "software-metrics.tex", manuscript: true, note: "The download is the LaTeX manuscript source. The published chapter is available through Springer." },
     links: [
       { label: "Published paper on Springer", href: "https://link.springer.com/chapter/10.1007/978-3-032-11456-3_30" },
       { label: "View the code", href: "https://github.com/dayveedaniel/ASE_Project_team_3/tree/main" }
