@@ -179,7 +179,7 @@ main { margin-left: var(--sidebar-width); }
 }
 .entry p { max-width: 650px; margin: 8px 0 0; color: var(--muted); font-size: 14px; }
 .entry-side { display: flex; align-items: flex-end; flex-direction: column; gap: 8px; padding-top: 5px; text-align: right; }
-.entry-side span { color: var(--muted); font: 10px var(--mono); text-transform: uppercase; letter-spacing: .04em; }
+.entry-side span { color: var(--muted); font: 10px/1.65 var(--mono); text-transform: uppercase; letter-spacing: .04em; }
 .entry-side a { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; color: var(--blue); font-size: 27px; line-height: 1; text-decoration: none; }
 .entry-side a:hover { text-decoration: underline; text-underline-offset: 4px; }
 
