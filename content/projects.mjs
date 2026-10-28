@@ -21,13 +21,11 @@ export const projects = [
   },
   {
     slug: "nanotitan", title: "nanoTitan", category: "PyTorch · MoE · Distributed training · GPU parallelism", section: "projects",
-    summary: "Building an open-source LLM training framework with a friend, with contributions to attention and normalization and planned work on parallelism and custom GPU kernels.", report: null,
+    summary: "Ongoing collaboration on an open-source LLM training framework, with contributions to attention and normalization.", report: null,
     links: [{ label: "Read Israel Adewuyi’s write-up", href: "https://israel-adewuyi.github.io/blog/2026/distributed/" }],
-    body: `<p>I’m building <strong>nanoTitan alongside a friend</strong>: an open-source LLM training framework with a mixture-of-experts stack. My contributions span model implementation, with ongoing collaboration and planned work on distributed training, GPU parallelism, and efficient custom operations.</p>
-      <h2>Contributions so far</h2><p>I added PyTorch scaled dot-product attention (SDPA), with an eager fallback, along with fused query, key, and value projections and RMSNorm. The fallback retains an alternative attention path, while fused QKV projections bring the three attention projections into a shared operation.</p>
-      <h2>Planned work: parallelism</h2><p>We plan to explore additional ways to distribute training across GPUs, including <strong>tensor parallelism</strong> and <strong>optimizer-state sharding (optimizer parallelism)</strong>. This is the next stage of my contribution to the framework, with a focus on how different strategies affect memory use, communication, and training throughput.</p>
-      <h2>Planned work: architecture support</h2><p>We intend to keep the framework up to date with evolving LLM architectures. Building on the RMSNorm and attention work already contributed, I plan to extend and maintain support for components such as rotary positional embeddings (RoPE), RMSNorm, and FlashAttention integration.</p>
-      <h2>Planned work: custom GPU kernels</h2><p>I also plan to move toward writing custom kernels for framework-specific operations, targeting execution speed and memory efficiency. The approach will be to profile bottlenecks, implement targeted optimizations, and check numerical correctness, runtime, and peak memory against the existing implementations.</p>`
+    body: `<p><strong>nanoTitan is an ongoing collaboration</strong> on an open-source LLM training framework with a mixture-of-experts stack.</p>
+      <h2>Contributions so far</h2><p>I added PyTorch scaled dot-product attention (SDPA) with an eager fallback, fused query, key, and value projections, and RMSNorm.</p>
+      <h2>Next steps</h2><p>We plan to explore tensor parallelism and optimizer-state sharding, and maintain support for evolving LLM architectures using RoPE, RMSNorm, and FlashAttention. I also plan to develop custom GPU kernels to improve speed and memory efficiency, validating numerical correctness and profiling performance.</p>`
   },
   {
     slug: "ecg-benchmarking", title: "A Comparative Study of Signal Processing and Machine Learning Algorithms for Atrial Fibrillation Detection in Long-Term ECG Monitoring", category: "Data engineering · Time series · Signal processing · PySpark", badge: "MSc thesis", section: "projects",
