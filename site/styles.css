@@ -147,7 +147,6 @@ main { margin-left: var(--sidebar-width); }
 }
 
 #projects, #research, #future-research, #cv { border-top: 1px solid var(--line); }
-#future-research .section-header { margin-bottom: 0; }
 .section-header { margin-bottom: 55px; }
 .section-header h2 { font-size: clamp(3.8rem, 8vw, 7rem); line-height: .92; }
 .section-header > p:last-child { max-width: 600px; margin: 27px 0 0; color: var(--muted); font-size: 18px; }

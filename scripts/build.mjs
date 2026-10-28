@@ -1,6 +1,9 @@
 import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { projects } from "../content/projects.mjs";
+import { futureResearch } from "../content/future-research.mjs";
+
+const articles = [...projects, ...futureResearch];
 
 const root = resolve(import.meta.dirname, "..");
 const output = resolve(root, "dist");
@@ -15,7 +18,7 @@ const origin = new URL(template.match(/rel="canonical" href="([^"]+)"/)[1]).orig
 const escape = (value) => value.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 const articlePath = (project) => `/${project.section}/${project.slug}/`;
 const badge = (project) => project.badge ? ` <span class="project-badge">${escape(project.badge)}</span>` : "";
-const entries = (section) => projects.filter((project) => project.section === section).map((project, index) => `
+const entries = (section) => articles.filter((project) => project.section === section).map((project, index) => `
   <article class="entry">
     <span class="entry-index">${String(index).padStart(2, "0")}</span>
     <div><h3><a href="${articlePath(project)}">${escape(project.title)}</a>${badge(project)}</h3><p>${escape(project.summary)}</p></div>
@@ -24,7 +27,8 @@ const entries = (section) => projects.filter((project) => project.section === se
 
 await writeFile(resolve(output, "index.html"), template
   .replace("<!-- PROJECT_ENTRIES -->", entries("projects"))
-  .replace("<!-- RESEARCH_ENTRIES -->", entries("research")));
+  .replace("<!-- RESEARCH_ENTRIES -->", entries("research"))
+  .replace("<!-- FUTURE_RESEARCH_ENTRIES -->", entries("future-research")));
 
 const sidebar = template.match(/<aside class="sidebar"[\s\S]*?<\/aside>/)[0]
   .replaceAll('href="#', 'href="/#');
@@ -32,9 +36,9 @@ const footer = template.match(/<footer class="site-footer">[\s\S]*?<\/footer>/)[
   .replace('href="#home"', 'href="#content"');
 await mkdir(resolve(output, "reports"), { recursive: true });
 
-for (const project of projects) {
+for (const project of articles) {
   const title = escape(project.title);
-  const section = project.section === "research" ? "Research" : "Projects";
+  const section = { projects: "Projects", research: "Research", "future-research": "Future Research" }[project.section];
   const report = project.report;
   const reports = [report, ...(project.additionalReports ?? [])].filter(Boolean);
   for (const file of reports) await cp(resolve(root, "reports", file.source), resolve(output, "reports", file.file));
@@ -99,6 +103,6 @@ for (const project of projects) {
 
 await writeFile(resolve(output, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${["/", ...projects.map(articlePath)].map((path) => `  <url><loc>${origin}${path}</loc></url>`).join("\n")}
+${["/", ...articles.map(articlePath)].map((path) => `  <url><loc>${origin}${path}</loc></url>`).join("\n")}
 </urlset>\n`);
-console.log(`Built static site with ${projects.length} articles in dist/`);
+console.log(`Built static site with ${articles.length} articles in dist/`);

@@ -14,6 +14,8 @@ For Cloudflare Pages, use `npm run build` as the build command and `dist` as the
 
 - `site/index.html` — homepage template, shared sidebar, and CV copy
 - `content/projects.mjs` — article copy, homepage summaries, and report mappings
+- `content/future-research.mjs` — future research summaries and article copy
+- `future_research/` — source research concept notes
 - `site/styles.css` — visual design and responsive layout
 - `site/navigation.js` — mobile menu and footer year
 - `scripts/build.mjs` — generates the homepage, article pages, sitemap, and report downloads
@@ -21,6 +23,7 @@ For Cloudflare Pages, use `npm run build` as the build command and `dist` as the
 - `public/` — downloadable résumé and research files
 
 Each project opens at `/projects/<slug>/`; research articles use `/research/<slug>/`.
+Future research notes use `/future-research/<slug>/`.
 The build copies only reports explicitly mapped in `content/projects.mjs` into `dist/reports/`.
 To add a report to an existing article, replace its `report: null` with a source filename and
 a URL-safe output filename. LaTeX sources use `manuscript: true` and are labeled as `.tex`
