@@ -17,9 +17,9 @@ const articlePath = (project) => `/${project.section}/${project.slug}/`;
 const badge = (project) => project.badge ? ` <span class="project-badge">${escape(project.badge)}</span>` : "";
 const entries = (section) => projects.filter((project) => project.section === section).map((project, index) => `
   <article class="entry">
-    <span class="entry-index">${String(index + 1).padStart(2, "0")}</span>
+    <span class="entry-index">${String(index).padStart(2, "0")}</span>
     <div><h3><a href="${articlePath(project)}">${escape(project.title)}</a>${badge(project)}</h3><p>${escape(project.summary)}</p></div>
-    <div class="entry-side"><span>${escape(project.category)}</span><a href="${articlePath(project)}" aria-label="Read ${escape(project.title)}">Read article ↗</a></div>
+    <div class="entry-side"><span>${escape(project.category)}</span><a href="${articlePath(project)}" aria-label="Read ${escape(project.title)}">↗</a></div>
   </article>`).join("\n");
 
 await writeFile(resolve(output, "index.html"), template
