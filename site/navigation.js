@@ -39,6 +39,13 @@ const requestSectionUpdate = () => {
   });
 };
 
+const syncSectionFromLocation = () => {
+  const sectionId = window.location.hash.slice(1);
+  const hashMatchesSection = sections.some((section) => section.id === sectionId);
+  if (hashMatchesSection) setActiveSection(sectionId);
+  else updateActiveSection();
+};
+
 menuButton?.addEventListener("click", () => {
   const open = menuButton.getAttribute("aria-expanded") === "true";
   menuButton.setAttribute("aria-expanded", String(!open));
@@ -55,16 +62,11 @@ navigationLinks.forEach((link) => {
 
 window.addEventListener("scroll", requestSectionUpdate, { passive: true });
 window.addEventListener("resize", requestSectionUpdate);
-
-const syncSectionFromLocation = () => {
-  const sectionId = window.location.hash.slice(1);
-  const hashMatchesSection = sections.some((section) => section.id === sectionId);
-  if (hashMatchesSection) setActiveSection(sectionId);
-  else updateActiveSection();
-};
-
-window.addEventListener("load", syncSectionFromLocation);
 window.addEventListener("hashchange", syncSectionFromLocation);
-syncSectionFromLocation();
+window.addEventListener("load", () => {
+  syncSectionFromLocation();
+  window.setTimeout(syncSectionFromLocation, 200);
+});
 
+syncSectionFromLocation();
 document.querySelector("[data-year]").textContent = new Date().getFullYear();
