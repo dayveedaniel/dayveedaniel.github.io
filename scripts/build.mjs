@@ -70,7 +70,7 @@ for (const project of projects) {
           <h1>${title}</h1>
           <p class="article-deck">${escape(project.summary)}</p>
           <div class="article-resources">${resources}</div>
-          ${report?.manuscript ? '<p class="article-note">LaTeX manuscript source; a compiled PDF is not yet available.</p>' : ""}
+          ${report?.manuscript ? `<p class="article-note">${escape(report.note ?? "LaTeX manuscript source; a compiled PDF is not yet available.")}</p>` : ""}
         </header>
         <div class="article-body">${project.body}</div>
         <nav class="article-end" aria-label="Article navigation"><a href="/#${project.section}">← Back to ${section.toLowerCase()}</a><a href="#content">Back to top ↑</a></nav>

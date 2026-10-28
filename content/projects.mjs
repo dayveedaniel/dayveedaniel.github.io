@@ -109,14 +109,19 @@ export const projects = [
       <p class="article-note">Coauthored with Danil Afonchikov and Kelvin Asu Ekuri.</p>`
   },
   {
-    slug: "software-metrics", title: "Selecting software-engineering metrics", category: "Optimization", section: "research",
+    slug: "software-metrics", title: "Selecting software-engineering metrics", category: "Published · Springer 2026", section: "research",
     summary: "Finding a smaller set of metrics while preserving the geometric relationships in the original data.",
-    report: { source: "AMSTA25-21.tex", file: "software-metrics.tex", manuscript: true },
-    links: [{ label: "View the code", href: "https://github.com/dayveedaniel/ASE_Project_team_3/tree/main" }],
+    report: { source: "AMSTA25-21.tex", file: "software-metrics.tex", manuscript: true, note: "The download is the LaTeX manuscript source. The published chapter is available through Springer." },
+    links: [
+      { label: "Published paper on Springer", href: "https://link.springer.com/chapter/10.1007/978-3-032-11456-3_30" },
+      { label: "View the code", href: "https://github.com/dayveedaniel/ASE_Project_team_3/tree/main" }
+    ],
     body: `<p>A long list of software metrics is not always more informative. Some measurements overlap, while others contribute little to the structure of a dataset. This work explores how to keep a small subset without losing the relationships between data points.</p>
       <h2>Selecting features by structure</h2><p>Our study uses Equilibrium Optimizer (EO) and Differential Evolution (DE) to search over subsets of metrics. Sammon Error and Kruskal Stress measure how much the reduced representation distorts pairwise relationships. A penalty on subset size encourages compact solutions.</p>
       <p>My contribution included implementing the Equilibrium Optimizer approach. The optimization balances two goals: fewer retained metrics and better preservation of the original geometry.</p>
       <h2>What the manuscript reports</h2><p>In the studied setting, EO reduced 30 metrics to five. The manuscript reports Sammon Error below 0.1 in 85% of EO runs and describes DE as another effective route to compact subsets.</p>
-      <h2>Why this is useful</h2><p>Keeping original metrics, rather than replacing them entirely with latent components, can make the reduced dataset easier to interpret. Preserving geometric structure is the objective tested here; it does not by itself establish better downstream prediction accuracy.</p>`
+      <h2>Why this is useful</h2><p>Keeping original metrics, rather than replacing them entirely with latent components, can make the reduced dataset easier to interpret. Preserving geometric structure is the objective tested here; it does not by itself establish better downstream prediction accuracy.</p>
+      <h2>Publication</h2><p>Marina Kotelevskaya, Daniel David, Nikita Yaneev, and Zamira Kholmatova. <cite>Software Engineering Metrics Selection Using Equilibrium Optimizer and Differential Evolution.</cite> In <cite>Agents and Multi-agent Systems: Technologies and Applications 2025</cite> (KES AMSTA 2025), Smart Innovation, Systems and Technologies, volume 464, pages 359–368. Springer, 2026.</p>
+      <p class="article-note">First published online <time datetime="2026-10-06">6 October 2026</time>. DOI: <a href="https://doi.org/10.1007/978-3-032-11456-3_30">10.1007/978-3-032-11456-3_30</a>.</p>`
   }
 ];
