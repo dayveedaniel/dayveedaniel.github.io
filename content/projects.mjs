@@ -2,23 +2,23 @@
 // Keep unavailable reports null until a matching source is supplied.
 export const projects = [
   {
-    slug: "multilingual-math", title: "Multilingual math reasoning", category: "SFT data · Evaluation", section: "projects",
-    summary: "Building an SFT dataset for mathematical reasoning in local African languages (Igbo, Hausa, and Yoruba).",
+    slug: "multilingual-math", title: "Multilingual math reasoning", category: "Synthetic data", badge: "CSV dataset", section: "projects",
+    summary: "Synthetic data generation for SFT in local African languages (Igbo, Hausa, and Yoruba), with evaluation to identify harder maths questions.",
     report: null,
-    links: [{ label: "Explore the dataset", href: "https://huggingface.co/datasets/dayveedd/gsm8k-lowres-math" }],
-    body: `<p>The goal of this project is to build a supervised fine-tuning (SFT) dataset that helps models reason through maths problems in local African languages (Igbo, Hausa, and Yoruba). I translated GSM8K problems into these languages and used an evaluation harness to measure solver behavior and identify harder questions.</p>
-      <h2>Building and evaluating the dataset</h2><p>The translated questions retain GSM8K’s canonical numeric answers as their ground truth. Codex / GPT-5.5 and OpenRouter’s <code>tencent/hy3</code> were used for translation. The three scored math solvers are listed below.</p>
-      <div class="table-scroll"><table class="model-table"><caption>Models and evaluation configurations</caption><thead><tr><th scope="col">Model</th><th scope="col">Backend</th><th scope="col">Evaluation scope</th></tr></thead><tbody>
-      <tr><th scope="row"><code>Qwen/Qwen2.5-1.5B-Instruct</code></th><td>vLLM · NVIDIA</td><td>Igbo and Yoruba, <code>igbo_yoruba_first_50</code>; 1 sample per question.</td></tr>
-      <tr><th scope="row"><code>CohereLabs/tiny-aya-global</code></th><td>MLX · Apple Silicon</td><td>Several slices, including the full Igbo, Hausa, and Yoruba set with 16 samples per question.</td></tr>
-      <tr><th scope="row"><code>CohereLabs/tiny-aya-earth</code></th><td>MLX · Apple Silicon</td><td>The full three-language set with 1 sample per question, as a comparison with Global.</td></tr>
-      </tbody></table></div>
-      <h2>Strict final-answer scoring</h2><p>Each model is prompted in the target language to finish with <code>#### &lt;answer&gt;</code>. The harness extracts the number from the last <code>####</code> answer marker and compares it with GSM8K’s <code>canonical_final_answer</code>. A response that says “the answer is 8” but omits <code>#### 8</code> is counted incorrect; unmarked numbers in the reasoning do not count.</p>
-      <p>Before comparison, both values are normalized by stripping dollar signs, thousands commas, and wrapping punctuation, and evaluating fractions—for example, <code>1/2</code> and <code>0.5</code> match. The metric is strict exact-match accuracy: the number of correct answers divided by the number scored, reported overall and by language.</p>
-      <p>The CLI also reports parse rate—the fraction of generations with a numeric <code>####</code> answer—and truncation rate, where <code>finish_reason == length</code>. These help diagnose output failures; exact-match accuracy is the ranking metric.</p>
-      <h2>Finding harder questions</h2><p>For <code>tiny_aya_global_full_x16</code>, Tiny Aya Global generates 16 samples per question at temperature 0.9, each with a distinct seed. The fraction answered correctly, <code>n_correct / 16</code>, estimates that question’s difficulty for the model.</p>
-      <p>Questions answered correctly on at least 7 of the 16 trials are treated as easy and removed from the hard test split. The retained split, <code>igbo_yoruba_hausa_test_codex_hard_lt7of16</code>, contains questions with fewer than 7 correct trials. Tiny Aya Earth supplies the single-sample counterpart to this probe.</p>
-      <p>This connects dataset preparation with evaluation: an SFT resource for the three languages, alongside a harder test split for examining mathematical reasoning.</p>`
+    links: [{ label: "Explore the CSV dataset", href: "https://huggingface.co/datasets/dayveedd/gsm8k-lowres-math" }],
+    body: `<p>This project uses synthetic data generation to build a supervised fine-tuning (SFT) resource for mathematical reasoning in local African languages (Igbo, Hausa, and Yoruba). It combines translated GSM8K questions, model evaluation, and difficulty filtering to produce a CSV dataset and a harder test split.</p>
+      <h2>Synthetic data generation</h2><p><strong>GPT-5.5, through the Codex CLI, generated the main published dataset.</strong> It batch-translated GSM8K’s full training and test sets—7,473 training questions and 1,319 test questions—into all three languages, retaining the original numeric answers as ground truth.</p>
+      <p>Earlier, smaller Igbo/Yoruba runs used <strong>Tencent HY3</strong> through a PostgreSQL/OpenRouter translation pipeline. That earlier slice was later used to evaluate Qwen. GPT-5.5 and HY3 were the translators; Qwen and Tiny Aya were used only to solve the translated questions.</p>
+      <h2>Evaluating the translations</h2><p>The harness scores three instruction-tuned solvers: <strong>Qwen2.5-1.5B-Instruct</strong> using vLLM on NVIDIA hardware, and <strong>Tiny Aya Global</strong> and <strong>Tiny Aya Earth</strong> using MLX on Apple Silicon. Their role is to measure mathematical reasoning on the generated data.</p>
+      <h2>Exact-match scoring</h2><p>Let <var>y</var><sub>i</sub> be the gold numeric answer and <var>ŷ</var><sub>i</sub> the prediction extracted from the last <code>####</code> answer marker. A missing marker counts as incorrect, even if the correct number appears elsewhere in the response.</p>
+      <p>Both values are numerically normalized: dollar signs, grouping commas, and wrapping punctuation are removed, and fractions are evaluated, so <code>1/2</code> and <code>0.5</code> are equivalent. Set <var>c</var><sub>i</sub> = 1 when a prediction exists and the normalized values match exactly; otherwise, <var>c</var><sub>i</sub> = 0. Accuracy over a set <var>S</var> is:</p>
+      <p class="equation" role="math" aria-label="Accuracy on S equals one divided by the number of items in S, times the sum of c i over items in S."><var>Acc</var>(<var>S</var>) = <span>1 / |<var>S</var>|</span> · ∑<sub>i ∈ S</sub> <var>c</var><sub>i</sub></p>
+      <p>Accuracy is reported overall and per language. Parse and truncation rates provide diagnostics for formatting failures and incomplete generations.</p>
+      <h2>Keeping harder questions</h2><p>Tiny Aya Global is sampled 16 times per question at temperature 0.9, with a distinct seed for each generation. If <var>n</var><sub>j</sub> is the number of correct trials, its empirical pass rate is:</p>
+      <p class="equation" role="math" aria-label="The estimated pass rate for question j equals the number of correct trials divided by 16."><var>p̂</var><sub>j</sub> = <var>n</var><sub>j</sub> / 16</p>
+      <p><strong>Easier questions were filtered out after evaluation.</strong> Questions solved correctly on at least 7 of 16 trials were removed from the hard test split, leaving only those with 0–6 correct trials:</p>
+      <p class="equation" role="math" aria-label="The hard test set contains questions j with fewer than seven correct trials."><var>H</var> = { <var>j</var> : <var>n</var><sub>j</sub> &lt; 7 }</p>
+      <p>Tiny Aya Earth provides a single-sample comparison. The hard split captures questions that are difficult for the evaluated model and complements the full translated SFT dataset.</p>`
   },
   {
     slug: "nanotitan", title: "nanoTitan", category: "PyTorch · MoE", section: "projects",

@@ -246,7 +246,7 @@ main { margin-left: var(--sidebar-width); }
 .article-body th:first-child { text-align: left; }
 .article-body tbody th { font-weight: 400; }
 .article-body code { font-family: var(--mono); font-size: .85em; overflow-wrap: anywhere; }
-.article-body .model-table th, .article-body .model-table td { text-align: left; vertical-align: top; }
+.article-body .equation { margin: 24px 0; padding: 15px 12px; border-block: 1px solid var(--line); font-family: var(--serif); font-size: 20px; text-align: center; overflow-x: auto; white-space: nowrap; }
 
 @media (max-width: 900px) {
   :root { --sidebar-width: 0px; }
