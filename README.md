@@ -12,7 +12,16 @@ For Cloudflare Pages, use `npm run build` as the build command and `dist` as the
 
 ## Content
 
-- `site/index.html` — page structure and portfolio copy
+- `site/index.html` — homepage template, shared sidebar, and CV copy
+- `content/projects.mjs` — article copy, homepage summaries, and report mappings
 - `site/styles.css` — visual design and responsive layout
-- `site/script.js` — navigation, project filtering, and small interactions
+- `site/navigation.js` — mobile menu and footer year
+- `scripts/build.mjs` — generates the homepage, article pages, sitemap, and report downloads
+- `reports/` — original project reports and research manuscripts
 - `public/` — downloadable résumé and research files
+
+Each project opens at `/projects/<slug>/`; research articles use `/research/<slug>/`.
+The build copies only reports explicitly mapped in `content/projects.mjs` into `dist/reports/`.
+To add a report to an existing article, replace its `report: null` with a source filename and
+a URL-safe output filename. LaTeX sources use `manuscript: true` and are labeled as `.tex`
+downloads, not PDFs. Rebuild after editing; serve `dist/`, not the source templates.
