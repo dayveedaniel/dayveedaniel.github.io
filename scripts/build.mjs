@@ -35,6 +35,7 @@ const sidebar = template.match(/<aside class="sidebar"[\s\S]*?<\/aside>/)[0]
 const footer = template.match(/<footer class="site-footer">[\s\S]*?<\/footer>/)[0]
   .replace('href="#home"', 'href="#content"');
 await mkdir(resolve(output, "reports"), { recursive: true });
+await mkdir(resolve(output, "proposals"), { recursive: true });
 
 for (const project of articles) {
   const title = escape(project.title);
@@ -42,7 +43,9 @@ for (const project of articles) {
   const report = project.report;
   const reports = [report, ...(project.additionalReports ?? [])].filter(Boolean);
   for (const file of reports) await cp(resolve(root, "reports", file.source), resolve(output, "reports", file.file));
+  if (project.proposal) await cp(resolve(root, "future_research", project.proposal), resolve(output, "proposals", project.proposal));
   const resources = [
+    ...(project.proposal ? [`<a href="/proposals/${escape(project.proposal)}" download>Download full proposal (MD) ↓</a>`] : []),
     ...(reports.length ? reports.map((file) => `<a href="/reports/${file.file}" download>Download ${escape(file.label ?? (file.manuscript ? "manuscript (.tex)" : "report (PDF)"))} ↓</a>`)
       : []),
     ...(project.links ?? []).map((link) => `<a href="${escape(link.href)}" target="_blank" rel="noreferrer">${escape(link.label)} ↗</a>`)

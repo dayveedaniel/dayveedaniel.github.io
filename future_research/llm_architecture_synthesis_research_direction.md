@@ -6,11 +6,11 @@
 
 Today's standard autoregressive large language model (LLM) commonly combines a subword tokenizer, an embedding layer, repeated Transformer blocks, and a vocabulary-projection/softmax output head trained with next-token prediction. Yet many individually promising alternatives have been proposed for **how language is represented, processed, remembered, predicted, and generated**. Some have received substantial research attention, but no single design is demonstrably best across model scales, tasks, and hardware constraints.
 
-This research proposes an **architecture synthesis and evaluation framework** for systematically testing these alternatives, both independently and in carefully selected combinations. The goal is not to assume that more experimental components necessarily produce a better model. Rather, it is to identify **which architectural modifications are complementary, which conflict, and under what conditions they outperform a conventional Transformer baseline**.
+This research proposes an **LLM architecture playground** for implementing proposed architectural changes and testing them against a documented standard Transformer baseline. A suitable Llama or Qwen model with an available implementation is a candidate starting point; the exact model and configuration remain to be selected. Experiments would replace components one by one, evaluate broader redesigns, and potentially replace all major components when the resulting architecture is coherent. The purpose is to make research proposals easier to reproduce, compare, and develop toward practical adoption.
 
 ## Central Research Question
 
-> Can underexplored or non-default language-model components be systematically recombined into architectures that improve quality, efficiency, robustness, or long-context capability relative to a comparably trained standard autoregressive Transformer?
+> Can a reproducible architecture playground turn proposed LLM changes—from individual component replacements to complete architectural redesigns—into usable implementations, establish their trade-offs against a documented Transformer baseline, and lower the barrier to wider adoption?
 
 ## Candidate Architectural Directions
 
@@ -28,12 +28,12 @@ This research proposes an **architecture synthesis and evaluation framework** fo
 
 ## Proposed Research Methodology
 
-A rigorous investigation should proceed incrementally:
+A shared experimental workflow would support both incremental replacements and whole-architecture proposals:
 
-1. **Reproducible baseline:** Train or reproduce a well-specified decoder-only Transformer using fixed data, context budgets, compute accounting, optimizer settings, and evaluation protocols.
+1. **Reproducible baseline:** Select a standard Transformer with a documented architecture and available implementation, such as a suitable Llama or Qwen model. Record its configuration and establish reproducible training and evaluation with fixed data, context budgets, compute accounting, and optimizer settings.
 2. **Isolated substitutions:** Replace one component at a time—for example, subword tokens with adaptive bytes, self-attention with a state-space block, or the categorical output head with a continuous-output method—and measure what changes.
-3. **Controlled combinations:** Combine only promising and architecturally compatible substitutions. Use pairwise tests and ablations before attempting a large hybrid. Account explicitly for interactions between sequence length, representation format, memory, generation objective, and output decoding.
-4. **Architecture synthesis:** Explore a limited search space of hybrids, rather than claiming that every proposal can be combined in one model. Reserve held-out tasks and datasets for final selection.
+3. **Broader replacements:** Implement proposed redesigns that replace several components or all major components, provided the resulting architecture has a coherent training and decoding path. Account for interactions between input representation, sequence processing, memory, generation objective, and output decoding.
+4. **Train, compare, and diagnose:** Train and evaluate each variant against the baseline under explicit resource budgets. Use ablations to explain outcomes where useful, while allowing complete architectural proposals to be evaluated in their own right. Reserve held-out tasks and datasets for final selection.
 5. **Scale validation:** Retest successful small-model findings at larger sizes and longer contexts to determine whether observed advantages persist.
 
 ## Evaluation and Scientific Challenges
@@ -44,17 +44,18 @@ A particular focus should be whether **continuous embedding-space prediction** g
 
 ## Research Gap and Expected Contributions
 
-Existing literature often evaluates a novel module against a selected baseline, while systematic cross-family comparisons can be difficult because training corpora, scales, objectives, tokenization, and hardware differ. The proposed contribution is a **reproducible, modular evaluation framework for architectural recombination**, including:
+Existing literature often evaluates a novel module against a selected baseline, while systematic cross-family comparisons can be difficult because training corpora, scales, objectives, tokenization, and hardware differ. The proposed contribution is a **reproducible implementation and evaluation playground that helps move architecture proposals toward practical adoption**, including:
 
 - An interchangeable set of input, backbone, memory, computation, and output modules where compatibility permits.
 - Controlled single-component and interaction studies against a conventional Transformer.
+- Implementations and evaluations of broader replacements and complete architectural proposals against the same documented baseline.
 - Evidence about which combinations improve quality, efficiency, or robustness—and which combinations fail.
 - A clear empirical assessment of continuous-output prediction versus conventional vocabulary projection.
 - Reusable benchmarks, implementation details, and cost/quality trade-off analyses to guide future LLM design.
 
 ## Long-Term Vision
 
-The objective is not necessarily one universal “new LLM,” but a **design methodology for discovering better language-model architectures**. The strongest outcome may be a family of purpose-built models: some optimized for long context, some for low-cost inference, and others for multilingual robustness or reasoning. Even negative results would be valuable if they explain why attractive ideas do not transfer across settings or fail when combined.
+The long-term goal is to **lower the barrier between proposed LLM architecture changes and mainstream use**. The playground would provide reusable implementations, reproducible training recipes, and clear evaluations so researchers and developers can try ideas without rebuilding the experimental infrastructure. Outcomes may include purpose-built models for long context, efficient inference, multilingual robustness, or reasoning. Negative results would also help establish when a proposed change is not ready for adoption.
 
 ## References — Research Papers
 

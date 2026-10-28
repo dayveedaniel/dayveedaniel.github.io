@@ -24,6 +24,7 @@ For Cloudflare Pages, use `npm run build` as the build command and `dist` as the
 
 Each project opens at `/projects/<slug>/`; research articles use `/research/<slug>/`.
 Future research notes use `/future-research/<slug>/`.
+Each note's `proposal` field maps a Markdown file in `future_research/` to a downloadable copy in `dist/proposals/`.
 The build copies only reports explicitly mapped in `content/projects.mjs` into `dist/reports/`.
 To add a report to an existing article, replace its `report: null` with a source filename and
 a URL-safe output filename. LaTeX sources use `manuscript: true` and are labeled as `.tex`
