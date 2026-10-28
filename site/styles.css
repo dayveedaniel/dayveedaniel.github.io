@@ -96,6 +96,13 @@ button { font: inherit; }
 }
 .primary-nav a span { color: var(--red); }
 .primary-nav a:hover, .primary-nav a:focus { color: var(--blue); }
+.primary-nav a.is-active {
+  color: var(--blue);
+  background: rgba(36, 83, 154, .08);
+  box-shadow: inset 3px 0 0 var(--blue);
+  font-weight: 700;
+}
+.primary-nav a.is-active span { color: var(--blue); }
 .sidebar-contact { margin-top: auto; }
 .command {
   margin: 0 0 15px;
