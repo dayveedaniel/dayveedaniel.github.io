@@ -96,13 +96,6 @@ button { font: inherit; }
 }
 .primary-nav a span { color: var(--red); }
 .primary-nav a:hover, .primary-nav a:focus { color: var(--blue); }
-.primary-nav a.is-active {
-  color: var(--blue);
-  background: rgba(36, 83, 154, .08);
-  box-shadow: inset 3px 0 0 var(--blue);
-  font-weight: 700;
-}
-.primary-nav a.is-active span { color: var(--blue); }
 .sidebar-contact { margin-top: auto; }
 .command {
   margin: 0 0 15px;
@@ -153,7 +146,7 @@ main { margin-left: var(--sidebar-width); }
   letter-spacing: .045em;
 }
 
-#work, #research, #cv { border-top: 1px solid var(--line); }
+#projects, #research, #cv { border-top: 1px solid var(--line); }
 .section-header { margin-bottom: 55px; }
 .section-header h2 { font-size: clamp(3.8rem, 8vw, 7rem); line-height: .92; }
 .section-header > p:last-child { max-width: 600px; margin: 27px 0 0; color: var(--muted); font-size: 18px; }
