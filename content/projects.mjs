@@ -31,13 +31,21 @@ export const projects = [
   },
   {
     slug: "ecg-benchmarking", title: "ECG data pipeline for benchmarking", category: "Data engineering", badge: "MSc thesis", section: "projects",
-    summary: "Collecting, cleaning, and standardizing heterogeneous ECG datasets into a common representation for detector benchmarking.",
+    summary: "Collecting, cleaning, and standardizing ECG data, with 1,567 processed recordings published at 250 Hz.",
     report: { source: "Thesis_final.pdf", file: "ecg-msc-thesis.pdf", label: "MSc thesis (PDF)" },
+    links: [
+      { label: "Dataset on Hugging Face", href: "https://huggingface.co/datasets/dayveedd/ecg-af-250hz" },
+      { label: "Framework on GitHub", href: "https://github.com/dayveedaniel/ecg-af-framework" }
+    ],
     body: `<p>ECG datasets arrive with different file formats, sampling rates, units, and annotation conventions. Before atrial-fibrillation detectors can be compared consistently, those differences need to be resolved. My MSc thesis contribution was the data pipeline that collects, cleans, and turns these heterogeneous sources into a common, auditable representation.</p>
       <h2>Collecting data from different sources</h2><p>I built a manifest-driven ingestion pipeline, with dataset configuration files describing where to fetch the data and how to handle it. Separate download strategies support PhysioNet, Zenodo, Figshare, and direct URLs. The pipeline preserves source files and records download metadata so processed recordings can be traced back to their origins.</p>
       <h2>Making heterogeneous data consistent</h2><p>The processing layer reads WFDB, MATLAB, HDF5, and CSV recordings through format-specific readers. It standardizes signal arrays and millivolt units, then resamples recordings to a common target rate—250 Hz in the thesis experiments—with anti-alias filtering. Annotation sample positions are adjusted alongside the waveforms to keep them aligned.</p>
       <p>Waveforms are written to a shared Parquet format, while JSON sidecars preserve annotations and source labels. MinIO stores the files, and PostgreSQL provides a searchable catalogue of recordings, channels, sampling rates, annotation availability, and provenance.</p>
-      <h2>What the pipeline enables</h2><p>Downstream benchmarking can use the same recording representation across sources, without repeating dataset-specific parsing and cleaning for every experiment. The thesis demonstrates the pipeline with four datasets from three providers; a broader dataset survey identifies candidates for future expansion.</p>
+      <h2>Published artifacts</h2><p>I published artifacts from this MSc thesis research so others can use the processed data and run the framework. The <a href="https://huggingface.co/datasets/dayveedd/ecg-af-250hz">ECG-AF-250Hz dataset on Hugging Face</a> contains 1,567 recordings standardized to 250 Hz, totaling approximately 13.4 GB.</p>
+      <div class="table-scroll"><table><caption>Recordings in the published dataset</caption><thead><tr><th scope="col">Source</th><th scope="col">Recordings</th></tr></thead><tbody><tr><th scope="row">CPSC 2021</th><td>1,425</td></tr><tr><th scope="row">MIT-BIH Atrial Fibrillation Database</th><td>23</td></tr><tr><th scope="row">AF Termination Challenge</th><td>80</td></tr><tr><th scope="row">Leipzig Heart Center</th><td>39</td></tr></tbody></table></div>
+      <p>The release includes Parquet waveforms, JSON annotations, recording metadata, available subject IDs and demographics, source citations, licenses, and checksums. Some rhythm labels are derived by dataset adapters, with the mappings documented in the dataset card. Release validation covered all 3,145 files, and sample download and loading checks passed for every source.</p>
+      <p>The <a href="https://github.com/dayveedaniel/ecg-af-framework/releases/tag/v0.1.1">MIT-licensed framework release, v0.1.1</a>, includes Python packages, documentation, and Docker setup. The Docker image was built and tested locally on ARM64.</p>
+      <p>These artifacts let downstream benchmarking use a common recording representation across sources, without repeating dataset-specific parsing and cleaning for every experiment.</p>
       <h2>About the thesis</h2><p><cite>A Comparative Study of Signal Processing and Machine Learning Algorithms for Atrial Fibrillation Detection in Long-Term ECG Monitoring</cite>, MSc thesis, Innopolis University, 2026. The shared thesis covers the wider benchmarking framework; my contribution focused on data acquisition, cleaning, harmonization, and pipeline development.</p>
       <p class="article-note">Coauthored with Danil Afonchikov. Supervised by Rustam Lukmanov.</p>`
   },
@@ -91,6 +99,22 @@ export const projects = [
       <p class="article-note">Team project with Kelvin Asu Ekuri, Danil Afonchikov, and Ivan Kiselyov.</p>`
   },
   {
+    slug: "software-metrics", title: "Selecting software-engineering metrics", category: "Published · Springer 2026", section: "research",
+    summary: "Finding a smaller set of metrics while preserving the geometric relationships in the original data.",
+    report: { source: "AMSTA25-21/AMSTA25-21.tex", file: "software-metrics.tex", manuscript: true, note: "The download is the LaTeX manuscript source. The published chapter is available through Springer." },
+    links: [
+      { label: "Published paper on Springer", href: "https://link.springer.com/chapter/10.1007/978-3-032-11456-3_30" },
+      { label: "View the code", href: "https://github.com/dayveedaniel/ASE_Project_team_3/tree/main" }
+    ],
+    body: `<p>A long list of software metrics is not always more informative. Some measurements overlap, while others contribute little to the structure of a dataset. This work explores how to keep a small subset without losing the relationships between data points.</p>
+      <h2>Selecting features by structure</h2><p>Our study uses Equilibrium Optimizer (EO) and Differential Evolution (DE) to search over subsets of metrics. Sammon Error and Kruskal Stress measure how much the reduced representation distorts pairwise relationships. A penalty on subset size encourages compact solutions.</p>
+      <p>My contribution included implementing the Equilibrium Optimizer approach. The optimization balances two goals: fewer retained metrics and better preservation of the original geometry.</p>
+      <h2>What the manuscript reports</h2><p>In the studied setting, EO reduced 30 metrics to five. The manuscript reports Sammon Error below 0.1 in 85% of EO runs and describes DE as another effective route to compact subsets.</p>
+      <h2>Why this is useful</h2><p>Keeping original metrics, rather than replacing them entirely with latent components, can make the reduced dataset easier to interpret. Preserving geometric structure is the objective tested here; it does not by itself establish better downstream prediction accuracy.</p>
+      <h2>Publication</h2><p>Marina Kotelevskaya, Daniel David, Nikita Yaneev, and Zamira Kholmatova. <cite>Software Engineering Metrics Selection Using Equilibrium Optimizer and Differential Evolution.</cite> In <cite>Agents and Multi-agent Systems: Technologies and Applications 2025</cite> (KES AMSTA 2025), Smart Innovation, Systems and Technologies, volume 464, pages 359–368. Springer, 2026.</p>
+      <p class="article-note">First published online <time datetime="2026-10-06">6 October 2026</time>. DOI: <a href="https://doi.org/10.1007/978-3-032-11456-3_30">10.1007/978-3-032-11456-3_30</a>.</p>`
+  },
+  {
     slug: "llm-guided-pinns", title: "LLM-guided weighting for physics-informed neural networks", category: "Scientific ML · Lead author", section: "research",
     summary: "Using a language model to adjust the balance between physics and boundary-condition losses during training.",
     report: { source: "meta-learners.tex", file: "llm-guided-pinns.tex", manuscript: true },
@@ -110,21 +134,5 @@ export const projects = [
       <p>Weighted SVD, ALS, and BCD reached similar reconstruction errors, with BCD taking fewer iterations. Iteration counts are not equivalent to wall-clock runtime, since the work per iteration differs by method.</p>
       <h2>Reading the comparison</h2><p>These are results from the project's experimental setup, not a universal ranking of recommendation algorithms. The report does not fully specify the dataset and evaluation split, which limits broader comparisons.</p>
       <p class="article-note">Coauthored with Danil Afonchikov and Kelvin Asu Ekuri.</p>`
-  },
-  {
-    slug: "software-metrics", title: "Selecting software-engineering metrics", category: "Published · Springer 2026", section: "research",
-    summary: "Finding a smaller set of metrics while preserving the geometric relationships in the original data.",
-    report: { source: "AMSTA25-21/AMSTA25-21.tex", file: "software-metrics.tex", manuscript: true, note: "The download is the LaTeX manuscript source. The published chapter is available through Springer." },
-    links: [
-      { label: "Published paper on Springer", href: "https://link.springer.com/chapter/10.1007/978-3-032-11456-3_30" },
-      { label: "View the code", href: "https://github.com/dayveedaniel/ASE_Project_team_3/tree/main" }
-    ],
-    body: `<p>A long list of software metrics is not always more informative. Some measurements overlap, while others contribute little to the structure of a dataset. This work explores how to keep a small subset without losing the relationships between data points.</p>
-      <h2>Selecting features by structure</h2><p>Our study uses Equilibrium Optimizer (EO) and Differential Evolution (DE) to search over subsets of metrics. Sammon Error and Kruskal Stress measure how much the reduced representation distorts pairwise relationships. A penalty on subset size encourages compact solutions.</p>
-      <p>My contribution included implementing the Equilibrium Optimizer approach. The optimization balances two goals: fewer retained metrics and better preservation of the original geometry.</p>
-      <h2>What the manuscript reports</h2><p>In the studied setting, EO reduced 30 metrics to five. The manuscript reports Sammon Error below 0.1 in 85% of EO runs and describes DE as another effective route to compact subsets.</p>
-      <h2>Why this is useful</h2><p>Keeping original metrics, rather than replacing them entirely with latent components, can make the reduced dataset easier to interpret. Preserving geometric structure is the objective tested here; it does not by itself establish better downstream prediction accuracy.</p>
-      <h2>Publication</h2><p>Marina Kotelevskaya, Daniel David, Nikita Yaneev, and Zamira Kholmatova. <cite>Software Engineering Metrics Selection Using Equilibrium Optimizer and Differential Evolution.</cite> In <cite>Agents and Multi-agent Systems: Technologies and Applications 2025</cite> (KES AMSTA 2025), Smart Innovation, Systems and Technologies, volume 464, pages 359–368. Springer, 2026.</p>
-      <p class="article-note">First published online <time datetime="2026-10-06">6 October 2026</time>. DOI: <a href="https://doi.org/10.1007/978-3-032-11456-3_30">10.1007/978-3-032-11456-3_30</a>.</p>`
   }
 ];
