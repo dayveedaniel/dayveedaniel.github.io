@@ -21,12 +21,16 @@ export const projects = [
       <p>This summary reflects the contributions listed in my résumé. Performance measurements and a detailed technical report are not yet available here.</p>`
   },
   {
-    slug: "ecg-benchmarking", title: "ECG detector benchmarking", category: "PySpark · PostgreSQL", section: "projects",
-    summary: "A reproducible evaluation pipeline spanning 42+ ECG databases and 14+ atrial-fibrillation detectors.", report: null,
-    body: `<p>Comparing atrial-fibrillation detectors requires more than running a model once. Datasets and evaluation workflows need to be organized so that experiments can be repeated and their outputs compared.</p>
-      <h2>My contribution</h2><p>I helped build a reproducible benchmark covering more than 42 ECG databases and 14 atrial-fibrillation detectors. The work combined data processing with evaluation infrastructure, using PySpark and PostgreSQL.</p>
-      <h2>The engineering problem</h2><p>At this scale, preparing data and keeping experimental outputs organized are substantial parts of the project. A common benchmark provides a foundation for comparing detectors across multiple data sources.</p>
-      <p>This article summarizes the scope documented in my résumé. Detector rankings, clinical performance claims, and detailed experimental results are not included because a matching report has not yet been added.</p>`
+    slug: "ecg-benchmarking", title: "ECG data pipeline for benchmarking", category: "MSc thesis · Data engineering", section: "projects",
+    summary: "Collecting, cleaning, and standardizing heterogeneous ECG datasets into a common representation for detector benchmarking.",
+    report: { source: "Thesis_final.pdf", file: "ecg-msc-thesis.pdf", label: "MSc thesis (PDF)" },
+    body: `<p>ECG datasets arrive with different file formats, sampling rates, units, and annotation conventions. Before atrial-fibrillation detectors can be compared consistently, those differences need to be resolved. My MSc thesis contribution was the data pipeline that collects, cleans, and turns these heterogeneous sources into a common, auditable representation.</p>
+      <h2>Collecting data from different sources</h2><p>I built a manifest-driven ingestion pipeline, with dataset configuration files describing where to fetch the data and how to handle it. Separate download strategies support PhysioNet, Zenodo, Figshare, and direct URLs. The pipeline preserves source files and records download metadata so processed recordings can be traced back to their origins.</p>
+      <h2>Making heterogeneous data consistent</h2><p>The processing layer reads WFDB, MATLAB, HDF5, and CSV recordings through format-specific readers. It standardizes signal arrays and millivolt units, then resamples recordings to a common target rate—250 Hz in the thesis experiments—with anti-alias filtering. Annotation sample positions are adjusted alongside the waveforms to keep them aligned.</p>
+      <p>Waveforms are written to a shared Parquet format, while JSON sidecars preserve annotations and source labels. MinIO stores the files, and PostgreSQL provides a searchable catalogue of recordings, channels, sampling rates, annotation availability, and provenance.</p>
+      <h2>What the pipeline enables</h2><p>Downstream benchmarking can use the same recording representation across sources, without repeating dataset-specific parsing and cleaning for every experiment. The thesis demonstrates the pipeline with four datasets from three providers; a broader dataset survey identifies candidates for future expansion.</p>
+      <h2>About the thesis</h2><p><cite>A Comparative Study of Signal Processing and Machine Learning Algorithms for Atrial Fibrillation Detection in Long-Term ECG Monitoring</cite>, MSc thesis, Innopolis University, 2026. The shared thesis covers the wider benchmarking framework; my contribution focused on data acquisition, cleaning, harmonization, and pipeline development.</p>
+      <p class="article-note">Coauthored with Danil Afonchikov. Supervised by Rustam Lukmanov.</p>`
   },
   {
     slug: "restaurant-forecasting", title: "Restaurant demand forecasting", category: "Airflow · Time series", section: "projects",
