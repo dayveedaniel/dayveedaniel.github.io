@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://daniel-david-ml-portfolio.groovyvenus133.chatgpt.site/sitemap.xml

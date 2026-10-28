@@ -1,0 +1,298 @@
+\documentclass{article}
+\usepackage{iclr2026_conference,times}
+\input{math_commands.tex}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+
+\title{Meta-learners and LLM-Guided Adaptive Weighting for Physics-Informed Neural Networks}
+
+
+\author{
+David Daniel Chukwuemeka$^{1}$, \quad Alexei Kornaev$^{2}$ \\
+Innopolis University \\
+\texttt{d.david@innopolis.university,a.kornaev@innopolis.ru}\\
+$^{1}$Faculty of Computer Science and Engineering \\
+$^{2}$Research Center of the Artificial Intelligence
+Institute \\
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Physics-Informed Neural Networks (PINNs) solve PDEs by embedding governing equations into the loss function, but they often converge slowly and require delicate tuning of loss weights and sampling strategies. We propose a novel approach that leverages a Large Language Model (LLM) as a meta-learner to dynamically suggest and adjust PINN loss weights based on observed training dynamics and residual patterns. We compare our LLM-guided method against a baseline with equal weighting and the Learning-Based PINN (LBPINN) adaptive weighting approach on dimensionless Poiseuille flow across 100 pressure gradient parameters. Our experiments across 5 random seeds demonstrate that adaptive weighting strategies accelerate convergence compared to fixed weights, with our LLM-guided approach showing slight improvements in overall performance through interpretable, reasoning-based adaptation of loss weights during training. We position our work within the landscape of PINN acceleration methods and provide insights to guide future method selection.
+\end{abstract}
+
+\section{Introduction}
+
+Physics-Informed Neural Networks (PINNs) have emerged as a powerful tool for solving partial differential equations by incorporating physical laws directly into neural network training \citep{Raissi2019}. However, a fundamental challenge in PINN training is the careful balancing of multiple loss terms, typically including PDE residuals, boundary conditions, and initial conditions. Poor weight selection leads to slow convergence, solution inaccuracy, or training instability. This challenge is particularly acute when training across multiple problem instances with varying parameters, where a single fixed weighting scheme may not be optimal across the entire parameter space.
+
+Traditional approaches to loss balancing rely on manual hyperparameter tuning or simple heuristics, which can be time-consuming and require domain expertise. Recent work has explored automatic methods including learned loss functions \citep{Psaros2022MetaLoss}, meta-learned initializations \citep{Penwarden2021MetalearningPINNs}, and self-adaptive uncertainty-based weighting \citep{Bischof2021LBPINN}. While these methods show promise, they are either computationally expensive to meta-train or lack the flexibility to incorporate domain-specific reasoning during adaptation.
+
+In this work, we explore a complementary approach: using Large Language Models as meta-controllers for PINN optimization. LLMs have demonstrated strong reasoning capabilities across diverse domains, and recent work has begun exploring their use in scientific computing and optimization tasks. We investigate whether LLMs can effectively guide loss weight adaptation by analyzing training dynamics and suggesting adjustments based on both quantitative metrics and qualitative patterns. Our approach differs from existing meta-learning methods by leveraging pre-trained language understanding rather than requiring task-specific meta-training.
+
+We make the following contributions: (1) We propose an LLM-guided adaptive weighting framework that uses natural language reasoning to dynamically adjust PINN loss weights during training; (2) We implement and compare three loss weighting strategies—baseline equal weighting, LBPINN self-adaptive weighting, and our LLM-guided approach—on a dimensionless Poiseuille flow problem; (3) We conduct extensive experiments across 100 parameter values with 5 random seeds, providing statistically robust comparisons; (4) We provide a comprehensive comparison table of PINN acceleration methods and discuss trade-offs in automation, interpretability, and computational cost.
+
+\section{Related Work}
+
+Recent research on PINN acceleration falls into two main categories: meta-learning approaches that amortize training cost across similar tasks, and per-task algorithmic techniques that improve single-instance optimization.
+
+\textbf{Meta-learning for PINNs.} Penwarden et al. \citep{Penwarden2021MetalearningPINNs} introduced meta-learning for parameterized PDEs using Reptile initialization, demonstrating that learned initializations can reduce adaptation steps across similar PDE families. Psaros et al. \citep{Psaros2022MetaLoss} meta-learned loss weighting functions across tasks to balance gradients and accelerate convergence, though their approach requires expensive meta-training and may overfit to the training distribution. Zhong et al. \citep{Zhong2022MetaPINN} presented Meta-PINN for arc simulations using two-loop training, while Bihlo \citep{Bihlo2024MetaOpt} trained meta-optimizers for specific PDE classes. Cho et al. \citep{Cho2023HyperMetaPINN} applied hypernetwork-based meta-learning for low-rank physics problems, generating instance-specific weights but with significant computational overhead.
+
+\textbf{Adaptive loss weighting.} Bischof and Kraus \citep{Bischof2021LBPINN} introduced Learning-Based PINN (LBPINN), which uses learnable uncertainty parameters to automatically balance loss terms during training. Building on the homoscedastic uncertainty framework of Kendall et al. \citep{Kendall2017}, LBPINN learns optimal weights without manual tuning by treating each loss term's uncertainty as a trainable parameter. This self-adaptive approach has shown promise in balancing competing objectives, though it requires careful initialization and may be sensitive to hyperparameter choices.
+
+\textbf{LLMs for scientific computing.} While recent work has explored using LLMs for code generation, mathematical reasoning, and scientific question answering, their use as meta-controllers for numerical optimization remains largely unexplored. Our work represents, to our knowledge, the first application of LLMs as adaptive controllers for physics-informed neural network training.
+
+Table~\ref{table:comparison} summarizes the landscape of PINN acceleration methods and positions our approach within this context.
+
+\begin{table}[htbp]
+\caption{Comparison of selected PINN acceleration methods.}
+\label{table:comparison}
+\begin{center}
+\small
+\begin{tabular}{p{2.2cm}p{2.8cm}p{2.8cm}p{3.0cm}}
+\toprule
+\textbf{Method / Paper} & \textbf{Core idea} & \textbf{How it accelerates} & \textbf{Limitation} \\
+\midrule
+Penwarden et al. (2021) & Meta initialization across parameterized PDEs & Warm-start reduces adaptation steps & Meta-training cost; limited to similar PDE families \\
+\midrule
+Psaros et al. (2022) & Meta-learned loss weighting across tasks & Balances gradients, accelerates convergence & Learned weights may overfit; expensive meta-training \\
+\midrule
+Bischof \& Kraus (2021) & Self-adaptive loss balancing via uncertainty & Automatic weight adjustment during training & Requires warmup; sensitive to initialization \\
+\midrule
+Bihlo (2024) & Meta-learned optimizer for PDE classes & More effective updates than fixed optimizers & Limited generalization beyond trained classes \\
+\midrule
+\textbf{Our method} & LLM-guided adaptive loss weighting & Reasoning-based dynamic rebalancing & API costs; prompt sensitivity; less principled \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+\section{Problem Formulation}
+
+We consider steady, fully developed flow of an incompressible Newtonian fluid between two infinite parallel plates. In dimensionless form with transverse coordinate $Y \in [-0.5, 0.5]$ and velocity $U$, the governing equation reduces to a Poisson problem:
+\begin{equation}
+\frac{d^2 U}{dY^2} = \Pi
+\end{equation}
+where $\Pi$ is the dimensionless pressure gradient parameter defined as $\Pi = \frac{h^2}{\mu U_{\mathrm{ref}}} \frac{dp}{dx}$, with $h$ the plate spacing, $\mu$ the dynamic viscosity, and $U_{\mathrm{ref}}$ a reference velocity scale. The no-slip boundary conditions are $U(-0.5) = U(0.5) = 0$, and the analytical solution is $U(Y) = \frac{\Pi}{2}(Y^2 - \frac{1}{4})$.
+
+We approximate $U(Y, \Pi)$ using a neural network $\hat{U}_\theta(Y, \Pi)$ parameterized by weights $\theta$. The PINN training objective combines a PDE residual loss and a boundary condition loss:
+\begin{equation}
+\mathcal{L}_{\text{total}} = w_{\text{PDE}} \mathcal{L}_{\text{PDE}} + w_{\text{BC}} \mathcal{L}_{\text{BC}}
+\label{eq:total_loss}
+\end{equation}
+where
+\begin{align}
+\mathcal{L}_{\text{PDE}} &= \frac{1}{N_c} \sum_{i=1}^{N_c} \left|\frac{\partial^2 \hat{U}_\theta}{\partial Y^2}(Y_i, \Pi_i) - \Pi_i\right|^2 \\
+\mathcal{L}_{\text{BC}} &= \frac{1}{N_b} \sum_{j=1}^{N_b} |\hat{U}_\theta(Y_j, \Pi_j)|^2
+\end{align}
+with collocation points $\{Y_i\}$ sampled in the interior domain and boundary points $Y_j \in \{-0.5, 0.5\}$. The key challenge is determining appropriate weights $w_{\text{PDE}}$ and $w_{\text{BC}}$ throughout training, particularly when training across multiple $\Pi$ values simultaneously.
+
+\section{Methodology}
+
+We compare three loss weighting strategies: a baseline with fixed equal weights, the LBPINN self-adaptive approach, and our proposed LLM-guided method.
+
+\subsection{Baseline: Equal Weighting}
+
+The simplest approach uses fixed equal weights $w_{\text{PDE}} = w_{\text{BC}} = 1.0$ throughout training. While this requires no hyperparameter tuning and provides a reproducible baseline, it may converge slowly when loss terms have significantly different magnitudes or optimization landscapes.
+
+\subsection{LBPINN Self-Adaptive Weighting}
+
+Following Bischof and Kraus \citep{Bischof2021LBPINN}, we implement self-adaptive loss weighting based on learnable uncertainty parameters. The method parameterizes each loss term's contribution using a learned log-variance $s_i \in \mathbb{R}$, with the total loss given by:
+\begin{equation}
+\mathcal{L}_{\text{LBPINN}} = \sum_{i} \frac{1}{2}\exp(-s_i) \mathcal{L}_i + \frac{1}{2}s_i
+\label{eq:lbpinn_loss}
+\end{equation}
+
+This formulation derives from maximizing the likelihood of a Gaussian observation model with learned variances, where the first term weights each loss inversely to its uncertainty and the second term prevents the trivial solution of infinite uncertainty. The effective weight for loss term $i$ is $w_i = \frac{1}{2}\exp(-s_i)$, learned jointly with the network parameters via gradient descent.
+
+For numerical stability, we implement several modifications beyond the original formulation. We bound the log-variances to $s_i \in [-3, 3]$, preventing extreme weight ratios and ensuring $w_i \in [0.025, 10]$. We introduce a warmup period of 20 epochs with equal weighting to allow initial stabilization before adaptive balancing begins. We also clamp the maximum ratio between any two weights to 100:1 and apply gradient clipping with norm 1.0 to the log-variance parameters. These modifications, detailed in Appendix~\ref{app:lbpinn}, significantly improve training stability compared to the baseline LBPINN formulation.
+
+\subsection{LLM-Guided Adaptive Weighting}
+
+Our proposed approach uses an LLM (Claude Sonnet 4.5) as a meta-controller to suggest weight updates based on comprehensive training analysis. At regular intervals during training (every 100 steps in our experiments), we query the LLM with a structured prompt containing recent training history, loss trends, and convergence metrics. The LLM analyzes these patterns and returns suggested weight values in JSON format.
+
+The prompt structure includes four main components. First, we provide context about the PDE being solved and the physics of the problem. Second, we supply recent training history including loss values, weights used, and epoch numbers. Third, we include enhanced diagnostics such as validation trends (slope analysis, improvement rates), training stability metrics (loss variance, convergence assessment), and optionally gradient analysis when enabled. Fourth, we provide instructions specifying that the LLM should respond only with a JSON object containing suggested weights for each loss term.
+
+The LLM processes this information and suggests weight adjustments. For example, if validation loss shows a degrading trend while training loss continues to decrease, the LLM might suggest reducing the weight of the dominant loss term to prevent overfitting. If training shows high variance, it might suggest more conservative weight changes. The suggested weights are then applied for the next update interval, creating a feedback loop where the LLM continuously adapts the loss balance based on observed dynamics.
+
+This approach differs from LBPINN in several key ways. Rather than following a fixed mathematical optimization principle, the LLM can incorporate qualitative reasoning about training dynamics and domain-specific knowledge encoded in the prompt. However, this flexibility comes at a cost: the method requires API calls with associated latency and monetary expense, and performance depends on careful prompt engineering. The update frequency represents a trade-off between responsiveness to changing dynamics and computational efficiency.
+
+\section{Experimental Setup}
+
+We generate a dataset of 100 dimensionless $\Pi$ values uniformly distributed in $[1.0, 10.0]$ and randomly split them into training (60\%), validation (20\%), and test (20\%) sets. For each $\Pi$ value, we generate 64 collocation points uniformly sampled in $Y \in [-0.5, 0.5]$ and 2 boundary points at $Y = \pm 0.5$. Each training batch contains spatial points for 20 randomly selected $\Pi$ values, creating a challenging scenario where the network must learn the solution across varying pressure gradients simultaneously.
+
+Our neural network architecture consists of two input nodes (for $Y$ and $\Pi$), four hidden layers with 64 neurons each using $\tanh$ activation, and one output node for the velocity $\hat{U}$, totaling approximately 18,000 parameters. We train using the Adam optimizer with learning rate $10^{-3}$ and weight decay $10^{-5}$ for 500 epochs, validating every 50 epochs. To ensure statistical robustness, we run each method with five different random seeds: 42, 123, 456, 789, and 1024.
+
+We evaluate each method using maximum absolute error rather than mean squared error, as MSE can be dominated by a few outliers and does not directly reflect solution quality for this problem. For each $\Pi$ value and each method, we compute the maximum absolute error $\text{Max Error} = \max_{i} |\hat{U}(Y_i, \Pi) - U_{\text{analytical}}(Y_i, \Pi)|$ on 100 uniformly spaced test points in $Y \in [-0.5, 0.5]$. We report statistics across all $\Pi$ values in the validation and test sets, aggregated over the five random seeds.
+
+\section{Results}
+
+Figure~\ref{fig:pi_maxuerror} presents the maximum velocity error distribution across all test $\Pi$ values using the best checkpoint model (selected by minimum validation loss). Rather than relying solely on point-wise maximum absolute errors or MSE metrics that can be dominated by outliers, we analyze the physically meaningful maximum velocity $U_{\text{max}}$ at the channel centerline ($Y=0$). For this problem, the analytical maximum velocity is $U_{\text{max}} = \Pi/8$, providing a natural metric for comparing model accuracy across different pressure gradients. We compute the relative error as $\epsilon_{\text{rel}} = |U_{\text{pred}} - U_{\text{analytical}}|/U_{\text{analytical}}$ for each $\Pi$ value. The visualization reveals several important patterns across the three methods. All methods show higher relative errors at low $\Pi$ values ($\Pi \approx 1$), where the velocity profile is flattest and small absolute errors translate to larger relative errors. LBPINN demonstrates the most stable and physically consistent convergence across the parameter range, maintaining both the lowest mean relative error ($\mu = 4.75 \times 10^{-2}$) and the tightest spread across random seeds. Its adaptive, physics-informed reweighting allows smooth error decay even under varying $\Pi$ conditions, indicating robust generalization and strong alignment between learned and analytical velocity profiles.
+In comparison, the baseline NONE model and the LLM-guided approach achieve nearly identical mean relative errors ($\mu = 5.68 \times 10^{-2}$ and $\mu = 5.61 \times 10^{-2}$, respectively). However, their training dynamics differ notably: the NONE model exhibits broader uncertainty bands and higher variance across epochs, suggesting sensitivity to initialization and fixed loss weighting. The LLM-guided method, despite matching the baseline in mean performance, shows more intermittent oscillations in loss, reflecting the impact of its discrete weight adjustment schedule. This indicates that while the LLM meta-learner can achieve comparable global optimization, it lacks the smooth, continuous adaptation of LBPINN that ensures consistent physical accuracy across all pressure gradients.
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{../images/results/pi_vs_max_u_error.png}
+\caption{Maximum velocity relative error vs $\Pi$ for test set evaluated on best checkpoint model. Each panel shows one meta-learner method with mean (solid line), min/max range (dotted lines), and confidence band (shaded region). The final mean relative error $\mu$ is annotated on each panel.}
+\label{fig:pi_maxuerror}
+\end{figure}
+
+Figure~\ref{fig:train_loss} shows training loss convergence for all three methods. The baseline equal weighting approach shows steady but slow convergence, reaching a plateau around epoch 300. LBPINN demonstrates faster initial convergence, particularly in the first 100 epochs, benefiting from its automatic adaptation to loss scale imbalances. The self-adaptive weights quickly learn to balance the PDE and boundary losses more effectively than fixed equal weighting. Our LLM-guided approach shows competitive convergence with periodic adjustments visible as small discontinuities every 100 steps when the LLM updates weights. While not as smooth as LBPINN due to these discrete updates, the LLM method achieves comparable final loss values, suggesting that reasoning-based adaptation can match gradient-based approaches despite using less frequent updates.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{../images/results/epoch_vs_train_loss.png}
+\caption{Validation loss during training and final test maximum absolute errors 
+on best checkpoint (mean $\pm$ std across 5 seeds). Test errors are maximum 
+absolute error across all $\Pi$ values, typically occurring at $\Pi = 1.0$.}
+\label{fig:train_loss}
+\end{figure}
+
+\begin{table}[t]
+\centering
+\caption{Validation errors during training and final test errors on best checkpoint (mean $\pm$ std across 5 seeds). Errors reported are maximum absolute error across all $\Pi$ values, typically occurring at $\Pi = 1.0$.}
+\label{tab:results}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Method} & \textbf{Epoch 100} & \textbf{Epoch 250} & \textbf{Epoch 500} \\
+\midrule
+\multicolumn{4}{l}{\textit{Validation Set (during training)}} \\
+NONE (Baseline) & $4.27 \pm 1.86 \times 10^{-2}$ & $1.24 \pm 0.54 \times 10^{-2}$ & $4.27 \pm 2.02 \times 10^{-3}$ \\
+LBPINN & $2.51 \pm 1.67 \times 10^{-1}$ & $8.56 \pm 3.01 \times 10^{-2}$ & $2.28 \pm 1.02 \times 10^{-2}$ \\
+LLM & $2.92 \pm 1.29 \times 10^{-2}$ & $5.67 \pm 2.95 \times 10^{-3}$ & $2.25 \pm 1.71 \times 10^{-3}$ \\
+\midrule
+\multicolumn{4}{l}{\textit{Test Set (best model checkpoint evaluation only)}} \\
+NONE (Baseline) & -- & -- & $1.04 \pm 0.70 \times 10^{-1}$ \\
+LBPINN & -- & -- & $9.26 \pm 4.75 \times 10^{-2}$ \\
+LLM & -- & -- & $1.05 \pm 0.59 \times 10^{-1}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Figure~\ref{fig:pi_maxerror} shows how mean squared error varies with $\Pi$ across the dataset using the best checkpoint model. All methods maintain errors within acceptable bounds across the full parameter range $[1, 10]$, with slightly higher errors at low $\Pi$ values as noted above. The variance across seeds is reasonably small for all methods, indicating robust performance. LBPINN shows marginally lower errors and tighter variance bounds than the other approaches, consistent with its more frequent adaptation.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{../images/results/pi_vs_mse.png}
+\caption{Mean squared error vs $\Pi$ for test set at epoch 500. Each panel shows one meta-learner method with mean (solid), min/max range (dotted), and confidence band (shaded).}
+\label{fig:pi_maxerror}
+\end{figure}
+
+\section{Discussion}
+
+Our experiments reveal complementary strengths and weaknesses across the three approaches. The baseline equal weighting method requires no hyperparameters and provides a simple, reproducible starting point, but converges most slowly and may struggle with harder problems where loss scales differ significantly. LBPINN offers fully automatic adaptation with strong mathematical foundations, achieving the fastest convergence in our experiments, but requires careful implementation with stability modifications and adds a small number of trainable parameters. Our LLM-guided approach provides interpretable reasoning and flexible adaptation without gradient-based weight learning, but incurs API costs, introduces latency, and shows slower early convergence than LBPINN due to less frequent updates.
+
+Several limitations of our work warrant discussion. First, we evaluated only a single PDE family (Poiseuille flow); generalization to more complex PDEs with multiple spatial dimensions, time dependence, or nonlinear terms remains unclear. Second, our LLM method's performance depends on prompt design, and we have not systematically explored prompt variations or sensitivity. Third, the computational cost analysis is incomplete—while LBPINN adds minimal overhead, the LLM approach incurs API latency (typically 1-3 seconds per call) and monetary cost (approximately \$0.01 per update in our experiments), which accumulate over training. Finally, our relatively simple test problem may not reveal the full potential or limitations of any method; harder PDEs with stronger gradient conflicts or stiff dynamics could show different relative performance.
+
+Future work should extend evaluation to more challenging PDEs including Navier-Stokes equations, reaction-diffusion systems, and problems with complex geometries. Systematic ablation studies on LLM update frequency, prompt design, and choice of diagnostic metrics would clarify what information most benefits adaptation. Hybrid approaches combining LBPINN's stability with LLM interpretability could leverage both methods' strengths. Finally, cost-benefit analysis comparing wall-clock time, computational resources, and solution quality across methods would guide practical deployment decisions.
+
+\section{Conclusion}
+
+We presented a comparative study of loss weighting strategies for Physics-Informed Neural Networks, introducing an LLM-guided adaptive approach and benchmarking it against equal weighting and LBPINN methods. Our experiments on dimensionless Poiseuille flow across 100 parameter values with 5 random seeds demonstrate that adaptive weighting accelerates convergence compared to fixed weights, with LBPINN providing the fastest early training and our LLM method offering interpretable reasoning-based adaptation. While all methods achieve acceptable final accuracy on this benchmark, LBPINN shows consistent advantages in convergence speed with only modest implementation complexity beyond baseline PINNs. The LLM approach demonstrates feasibility of using language models as meta-controllers for scientific computing, though current API costs and update latency limit practical deployment. Our comparison table and experimental results provide guidance for researchers selecting among PINN acceleration methods, highlighting trade-offs in automation, interpretability, and computational efficiency.
+
+\bibliography{iclr2026_conference}
+\bibliographystyle{iclr2026_conference}
+
+\appendix
+
+\section{Theoretical Background}
+\label{app:theory}
+
+Parallel plate (Poiseuille) flow represents a steady, incompressible laminar regime in a 2D channel. Under the assumption of fully developed flow with negligible inertial effects, the Navier-Stokes equations reduce to the one-dimensional momentum balance $\mu \frac{d^2 u}{dy^2} = \frac{dp}{dx}$, where $\mu$ is dynamic viscosity and $\frac{dp}{dx}$ is the constant pressure gradient. With no-slip boundary conditions $u(\pm h/2) = 0$ at the plate surfaces separated by distance $h$, the solution exhibits a parabolic velocity profile with maximum velocity at the centerline.
+
+Nondimensionalization using $Y = y/h$, $U = u/U_{\text{ref}}$, and $\Pi = \frac{h^2}{\mu U_{\text{ref}}}\frac{dp}{dx}$ yields the dimensionless form presented in Section 3, with analytical solution $U(Y) = \frac{\Pi}{2}(Y^2 - \frac{1}{4})$. This canonical flow problem provides an ideal testbed for PINN methods due to its known analytical solution, smooth velocity profile, and single non-dimensional parameter $\Pi$ controlling the flow strength.
+
+\section{LBPINN Implementation Details}
+\label{app:lbpinn}
+
+Our stable LBPINN implementation includes several enhancements beyond the base formulation of Bischof and Kraus \citep{Bischof2021LBPINN}. We bound log-variances to $s_i \in [-3, 3]$, ensuring that uncertainties remain in the range $\sigma_i^2 \in [e^{-3}, e^3] \approx [0.05, 20.09]$ and preventing weights from becoming extremely large or small. We implement a 20-epoch warmup period using equal weights $w_i = 1$ to allow initial network stabilization before adaptive balancing begins. During adaptive training, we clamp the ratio between maximum and minimum weights to 100:1, and apply gradient clipping with norm 1.0 to the log-variance parameters to prevent instabilities.
+
+We also maintain exponential moving averages of loss magnitudes with decay factor $\alpha = 0.99$: $\mu_t^{(i)} = \alpha \mu_{t-1}^{(i)} + (1-\alpha) \mathcal{L}_t^{(i)}$ for each loss term $i$. While we explored using these running statistics for loss normalization, we found that the bounded log-variances alone provided sufficient stability for our problem, and normalization did not substantially improve results. The learnable log-variance parameters $\{s_{\text{PDE}}, s_{\text{BC}}\}$ are optimized using a separate Adam optimizer with learning rate $10^{-3}$ and weight decay $10^{-4}$, updated after each backward pass through the main network parameters.
+
+\section{Additional Experimental Details}
+\label{app:experiment}
+
+\begin{table}[H]
+\centering
+\caption{Complete training configuration}
+\begin{tabular}{ll}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+Network architecture & 2-64-64-64-64-1 \\
+Activation function & $\tanh$ \\
+Total parameters & $\sim$18,000 \\
+Optimizer & Adam \\
+Learning rate & $10^{-3}$ \\
+Weight decay & $10^{-5}$ \\
+Batch size ($\Pi$ values) & 20 \\
+Collocation points per $\Pi$ & 64 \\
+Boundary points per $\Pi$ & 2 \\
+Training epochs & 500 \\
+Validation frequency & Every 50 epochs \\
+Random seeds & \{42, 123, 456, 789, 1024\} \\
+\midrule
+\multicolumn{2}{l}{\textit{LBPINN-specific}} \\
+Log-variance bounds & $[-3, 3]$ \\
+Warmup epochs & 20 \\
+Weight ratio limit & 100:1 \\
+Gradient clip norm & 1.0 \\
+Weight learning rate & $10^{-3}$ \\
+\midrule
+\multicolumn{2}{l}{\textit{LLM-specific}} \\
+Model & Claude Sonnet 4.5 \\
+Update frequency & Every 100 steps \\
+Initial weights & $w_{\text{PDE}}=0.8, w_{\text{BC}}=0.2$ \\
+Context window & 50 recent steps \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{LLM Prompt Template}
+\label{app:prompt}
+
+The prompt structure sent to Claude Sonnet 4.5 follows this template:
+
+\begin{verbatim}
+System: "You are a precise configuration optimizer 
+         for physics-informed neural networks."
+
+User: {
+  "context": "Assisting hyperparameter updates for 
+              PINN solving: [PDE description]",
+  "training_history": [
+    {"step": t, "losses": {...}, "weights": {...}},
+    ...
+  ],
+  "enhanced_diagnostics": {
+    "validation_trends": {
+      "trend": "improving/degrading/stable",
+      "slope": X.XX,
+      "recent_losses": [...]
+    },
+    "training_stability": {
+      "loss_variance": X.XX,
+      "loss_trend": "improving/degrading/stable",
+      "stability_score": X.XX
+    }
+  },
+  "instructions": "Analyze metrics and suggest weight 
+                   updates. Respond ONLY with JSON: 
+                   {\"pde_loss\": X.X, \"bc_loss\": X.X}",
+  "requirements": [
+    "If validation degrading, reduce dominant weight",
+    "If training unstable, make smaller adjustments",
+    "Consider validation trend slope in decisions"
+  ]
+}
+\end{verbatim}
+
+We deliberately exclude gradient analysis from the prompt in production experiments to avoid computational overhead, though we explored gradient-based diagnostics in preliminary studies. The LLM consistently returns well-formed JSON responses following this template, and we include error handling to revert to previous weights if the API call fails or returns malformed output.
+
+\end{document}

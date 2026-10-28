@@ -1,0 +1,102 @@
+\documentclass[11pt]{article}
+\usepackage[letterpaper,margin=0.5in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+\input{glyphtounicode}
+\pdfgentounicode=1
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlist[itemize]{leftmargin=15pt,label=\textbullet,itemsep=1pt,topsep=1pt,parsep=0pt,partopsep=0pt}
+\titleformat{\section}{\large\scshape}{}{0pt}{}[\titlerule]
+\titlespacing*{\section}{0pt}{4pt}{2pt}
+\urlstyle{same}
+\hypersetup{pdftitle={Daniel David -- Resume},pdfauthor={Daniel David}}
+
+\newcommand{\entry}[2]{\textbf{#1}\hfill #2\par}
+\newcommand{\project}[2]{\textbf{#1} {\small\textit{\textbar\ #2}}\par}
+
+\begin{document}
+\begin{center}
+    {\Huge\scshape Daniel David}\\[3pt]
+    \small +7 (923) 408 72 93 \enspace\textbar\enspace
+    \href{mailto:dayveed.d@gmail.com}{\underline{dayveed.d@gmail.com}} \enspace\textbar\enspace
+    \href{https://www.linkedin.com/in/dayveedaniel}{\underline{LinkedIn}} \enspace\textbar\enspace
+    \href{https://github.com/dayveedaniel}{\underline{github.com/dayveedaniel}}\\[3pt]
+    \textbf{Spoken Languages:} English, Russian
+\end{center}
+\vspace{-9pt}
+\fontsize{10}{11.5}\selectfont
+
+\section{Education}
+\entry{Innopolis University}{Innopolis, Russia}
+\textit{MSc, Artificial Intelligence \& Data Engineering}\hfill Aug. 2024 -- Jul. 2026 \textbar\ CGPA: 4.24\par
+\vspace{3pt}
+\entry{Tomsk Polytechnic University}{Tomsk, Russia}
+\textit{BEng, Software Engineering}\hfill Sep. 2019 -- Jul. 2024 \textbar\ CGPA: 3.85\par
+
+\section{Experience}
+\entry{PRAAMS --- Senior Software Developer}{Sep. 2022 -- Present}
+\begin{itemize}
+    \item Led architecture and development of PRAAMS, an AI-powered co-investor app combining conversational AI, stock analysis, and interactive financial visualizations.
+    \item Conducted technical interviews and onboarded new team members.
+\end{itemize}
+\vspace{3pt}
+\entry{Bellissimo Pizza --- ML / Data Engineering Consultant}{Jun. 2026 -- Nov. 2026}
+\begin{itemize}
+    \item Built an end-to-end data pipeline for order demand and price prediction using Airflow, PostgreSQL, and MinIO; automated ingestion, transformation, and training-data preparation.
+    \item Contributed to hourly demand forecasting for 50+ restaurants over 24/48/72-hour horizons, incorporating POS and weather features into model training and evaluation.
+    \item Automated model retraining on new data and maintained data pipelines to support recurring forecasting workflows.
+\end{itemize}
+\vspace{3pt}
+\entry{Innopolis University --- Student Researcher}{Aug. 2025 -- Sep. 2026}
+\begin{itemize}
+    \item Implemented and trained ML/RL models in PyTorch; built web-scraping and big-data analysis pipelines using MongoDB, PySpark, and Apache Hadoop.
+\end{itemize}
+
+\section{Selected Projects}
+\project{nanoTitan --- Open-Source Mixture-of-Experts Training Stack}{Python, PyTorch, Distributed Training, SDPA}
+\begin{itemize}
+    \item Added configurable SDPA / Flash Attention support to the existing multi-head attention module, retaining an eager attention path as a fallback.
+    \item Integrated fused QKV projections and RMSNorm into the model implementation.
+\end{itemize}
+\vspace{3pt}
+\project{Multilingual Math Reasoning for Nigerian Languages}{Docker, PostgreSQL, Hugging Face, vLLM, MLX}
+\begin{itemize}
+    \item Built a pipeline translating GSM8K math problems and solutions into Igbo, Hausa, and Yoruba for Tiny Aya supervised fine-tuning; produced the \href{https://huggingface.co/datasets/dayveedd/gsm8k-lowres-math}{\underline{gsm8k-lowres-math dataset}}.
+    \item Benchmarked Qwen2.5-1.5B-Instruct and Tiny Aya variants on math tasks in all three languages to select a fine-tuning base model.
+\end{itemize}
+\vspace{3pt}
+\project{ECG Benchmarking for Atrial Fibrillation Detection}{PySpark, PostgreSQL, MinIO}
+\begin{itemize}
+    \item Contributed to a reproducible benchmarking framework spanning 42+ ECG databases, with deterministic data splits, cached feature generation, and traceable experiment artifacts.
+    \item Helped benchmark 14+ detectors across datasets using window- and recording-level metrics, with quality and runtime comparisons through configurable experiments.
+\end{itemize}
+
+\vspace{3pt}
+\project{RAG for Document Collections}{Python, SentenceTransformers, LLMs}
+\begin{itemize}
+    \item Contributed to a Wikipedia-based RAG pipeline with article cleaning, chunking, 384-dimensional MiniLM embeddings, and incremental embedding updates.
+    \item Combined 3-gram candidate retrieval with cosine-similarity reranking to supply relevant document snippets for LLM-generated answers.
+\end{itemize}
+
+\section{Research}
+\textbf{Meta-learners and LLM-Guided Adaptive Weighting for Physics-Informed Neural Networks}\par
+\begin{itemize}
+    \item Lead-authored a study introducing an LLM meta-controller that dynamically balances PDE-residual and boundary-condition losses using training history, validation trends, and stability diagnostics.
+    \item Benchmarked LLM-guided weighting against fixed weights and LBPINN on Poiseuille flow across 100 pressure-gradient values and five random seeds, assessing convergence, solution accuracy, and adaptation trade-offs.
+\end{itemize}
+
+\vspace{3pt}
+\textbf{Software Engineering Metrics Selection Using Equilibrium Optimizer and Differential Evolution}\par
+\begin{itemize}
+    \item Implemented the Equilibrium Optimizer for software-metric selection, using heuristic search to identify compact feature subsets while preserving geometric relationships between data points.
+    \item Used Sammon error and Kruskal stress to evaluate structural preservation; the Equilibrium Optimizer reduced 30 metrics to five in a co-authored study also evaluating Differential Evolution.
+\end{itemize}
+
+\end{document}

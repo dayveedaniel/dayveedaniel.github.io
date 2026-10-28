@@ -1,0 +1,9 @@
+{
+  "name": "daniel-david-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portfolio and research site for Daniel David.",
+  "scripts": {
+    "build": "node scripts/build.mjs"
+  }
+}

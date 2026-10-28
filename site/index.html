@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Daniel David — ML Engineer &amp; Software Developer</title>
+    <meta name="description" content="Daniel David builds machine-learning systems, data pipelines, research prototypes, and production software." />
+    <meta name="theme-color" content="#0d1512" />
+    <meta property="og:title" content="Daniel David — ML Engineer" />
+    <meta property="og:description" content="Machine-learning systems, data engineering, open-source work, and applied research." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://daniel-david-ml-portfolio.groovyvenus133.chatgpt.site" />
+    <link rel="canonical" href="https://daniel-david-ml-portfolio.groovyvenus133.chatgpt.site" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Daniel David",
+        "jobTitle": "ML Engineer and Senior Software Developer",
+        "email": "mailto:dayveed.d@gmail.com",
+        "url": "https://daniel-david-ml-portfolio.groovyvenus133.chatgpt.site",
+        "sameAs": [
+          "https://github.com/dayveedaniel",
+          "https://www.linkedin.com/in/dayveedaniel"
+        ],
+        "knowsLanguage": ["English", "Russian"]
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header" data-header>
+      <a class="brand" href="#top" aria-label="Daniel David, home">
+        <span class="brand-mark" aria-hidden="true">DD</span>
+        <span class="brand-name">Daniel David</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+        <span class="sr-only">Toggle navigation</span>
+        <span></span><span></span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary" data-nav>
+        <a href="#work">Work</a>
+        <a href="#research">Research</a>
+        <a href="#experience">Experience</a>
+        <a href="#contact">Contact</a>
+        <a class="nav-resume" href="/daniel-david-resume.pdf" download>Résumé <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <div class="hero-grid" aria-hidden="true"></div>
+        <div class="hero-copy" data-reveal>
+          <p class="eyebrow"><span></span> ML systems · Data engineering · Applied research</p>
+          <h1 id="hero-title">I build machine-learning systems that survive contact with <em>real data.</em></h1>
+          <p class="hero-lede">I’m Daniel, an ML engineer and senior software developer working across production pipelines, model systems, research, and data-heavy products.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#work">Explore selected work <span aria-hidden="true">↓</span></a>
+            <a class="button button-ghost" href="/daniel-david-resume.pdf" download>Download résumé</a>
+          </div>
+        </div>
+        <aside class="hero-signal" aria-label="Current profile" data-reveal>
+          <div class="signal-orbit" aria-hidden="true">
+            <span class="orbit orbit-one"></span>
+            <span class="orbit orbit-two"></span>
+            <span class="signal-core">ML</span>
+          </div>
+          <div class="signal-copy">
+            <span>Focus</span>
+            <strong>Reliable ML, from data to deployment</strong>
+          </div>
+        </aside>
+        <div class="hero-proof" data-reveal>
+          <article>
+            <strong>50+</strong>
+            <span>restaurants in a demand-forecasting workflow</span>
+          </article>
+          <article>
+            <strong>42+</strong>
+            <span>ECG databases in a reproducible benchmark</span>
+          </article>
+          <article>
+            <strong>3</strong>
+            <span>Nigerian languages in a math-reasoning dataset</span>
+          </article>
+          <article>
+            <strong>14+</strong>
+            <span>atrial-fibrillation detectors evaluated</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="section work-section" id="work" aria-labelledby="work-title">
+        <div class="section-heading" data-reveal>
+          <div>
+            <p class="section-index">01 / Selected work</p>
+            <h2 id="work-title">Systems built around the hard parts.</h2>
+          </div>
+          <p>Data quality, evaluation, reproducibility, and product constraints—not just model demos.</p>
+        </div>
+
+        <div class="filter-bar" aria-label="Filter projects" data-reveal>
+          <button class="filter-button is-active" type="button" data-filter="all" aria-pressed="true">All work</button>
+          <button class="filter-button" type="button" data-filter="ml-systems" aria-pressed="false">ML systems</button>
+          <button class="filter-button" type="button" data-filter="data" aria-pressed="false">Data</button>
+          <button class="filter-button" type="button" data-filter="research" aria-pressed="false">Research</button>
+        </div>
+
+        <div class="project-grid" data-project-grid>
+          <article class="project-card project-card-featured" data-category="data" data-reveal>
+            <div class="project-topline">
+              <span class="project-number">P/01</span>
+              <span class="project-type">Data pipeline · Evaluation</span>
+            </div>
+            <div class="project-art project-art-language" aria-hidden="true">
+              <span>EN</span><span>IG</span><span>HA</span><span>YO</span>
+              <i></i><i></i><i></i>
+            </div>
+            <h3>Multilingual math reasoning for Nigerian languages</h3>
+            <p>Built a pipeline translating GSM8K questions and explanations into Igbo, Hausa, and Yoruba, then benchmarked Qwen and Tiny Aya variants to guide supervised fine-tuning.</p>
+            <ul class="tag-list" aria-label="Technologies">
+              <li>Hugging Face</li><li>vLLM</li><li>PostgreSQL</li><li>Docker</li>
+            </ul>
+            <a class="project-link" href="https://huggingface.co/datasets/dayveedd/gsm8k-lowres-math" target="_blank" rel="noreferrer">View published dataset <span aria-hidden="true">↗</span></a>
+          </article>
+
+          <article class="project-card" data-category="data research" data-reveal>
+            <div class="project-topline">
+              <span class="project-number">P/02</span>
+              <span class="project-type">Benchmarking · Healthcare</span>
+            </div>
+            <div class="project-art project-art-ecg" aria-hidden="true">
+              <svg viewBox="0 0 420 120" preserveAspectRatio="none">
+                <path d="M0 66h54l12-19 16 45 20-77 21 51h52l18-25 18 45 18-20h65l14-29 18 54 18-25h76" />
+              </svg>
+            </div>
+            <h3>ECG benchmarking for atrial fibrillation detection</h3>
+            <p>Contributed to a reproducible framework spanning 42+ databases and 14+ detectors, with deterministic splits, cached feature generation, and traceable experiment artifacts.</p>
+            <ul class="tag-list" aria-label="Technologies">
+              <li>PySpark</li><li>PostgreSQL</li><li>MinIO</li>
+            </ul>
+          </article>
+
+          <article class="project-card" data-category="ml-systems" data-reveal>
+            <div class="project-topline">
+              <span class="project-number">P/03</span>
+              <span class="project-type">Open source · Model systems</span>
+            </div>
+            <div class="project-art project-art-moe" aria-hidden="true">
+              <span class="router">R</span>
+              <span>E1</span><span>E2</span><span>E3</span><span>E4</span>
+            </div>
+            <h3>nanoTitan mixture-of-experts training stack</h3>
+            <p>Added configurable PyTorch SDPA / Flash Attention with an eager fallback, then integrated fused QKV projections and RMSNorm into the model architecture.</p>
+            <ul class="tag-list" aria-label="Technologies">
+              <li>Python</li><li>PyTorch</li><li>SDPA</li><li>MoE</li>
+            </ul>
+          </article>
+
+          <article class="project-card" data-category="data ml-systems" data-reveal>
+            <div class="project-topline">
+              <span class="project-number">P/04</span>
+              <span class="project-type">Forecasting · Production data</span>
+            </div>
+            <div class="project-art project-art-forecast" aria-hidden="true">
+              <div class="bar" style="--h: 31%"></div><div class="bar" style="--h: 45%"></div><div class="bar" style="--h: 38%"></div><div class="bar" style="--h: 62%"></div><div class="bar" style="--h: 56%"></div><div class="bar" style="--h: 78%"></div><div class="bar" style="--h: 91%"></div><div class="bar" style="--h: 72%"></div>
+            </div>
+            <h3>Demand forecasting for a restaurant network</h3>
+            <p>Built an end-to-end data pipeline for order demand and price prediction and supported hourly 24/48/72-hour forecasts across 50+ restaurants using POS and weather features.</p>
+            <ul class="tag-list" aria-label="Technologies">
+              <li>Airflow</li><li>PostgreSQL</li><li>MinIO</li><li>Forecasting</li>
+            </ul>
+          </article>
+
+          <article class="project-card" data-category="ml-systems data" data-reveal>
+            <div class="project-topline">
+              <span class="project-number">P/05</span>
+              <span class="project-type">Retrieval · LLM systems</span>
+            </div>
+            <div class="project-art project-art-rag" aria-hidden="true">
+              <span>Q</span><i></i><span>384d</span><i></i><span>A</span>
+            </div>
+            <h3>RAG for document collections</h3>
+            <p>Built a Wikipedia-based pipeline with cleaning, chunking, 384-dimensional MiniLM embeddings, incremental updates, and 3-gram retrieval with cosine reranking.</p>
+            <ul class="tag-list" aria-label="Technologies">
+              <li>Python</li><li>MiniLM</li><li>Embeddings</li><li>LLMs</li>
+            </ul>
+          </article>
+
+          <article class="project-card" data-category="ml-systems research" data-reveal>
+            <div class="project-topline">
+              <span class="project-number">P/06</span>
+              <span class="project-type">Multimodal · Explainability</span>
+            </div>
+            <div class="project-art project-art-kinship" aria-hidden="true">
+              <span>A</span><span>B</span><span>C</span><span>D</span>
+              <svg viewBox="0 0 320 120"><path d="M44 36 118 84M44 36 198 35M118 84 274 82M198 35 274 82" /></svg>
+            </div>
+            <h3>Kinship recognition from photographs</h3>
+            <p>Combined ArcFace and MiniLM embeddings through dual FAISS indexes and reciprocal rank fusion, with CatBoost classifiers and SHAP explanations across 11 kinship categories.</p>
+            <ul class="tag-list" aria-label="Technologies">
+              <li>ArcFace</li><li>FAISS</li><li>CatBoost</li><li>SHAP</li>
+            </ul>
+          </article>
+        </div>
+        <p class="filter-status sr-only" aria-live="polite" data-filter-status></p>
+      </section>
+
+      <section class="section research-section" id="research" aria-labelledby="research-title">
+        <div class="section-heading section-heading-light" data-reveal>
+          <div>
+            <p class="section-index">02 / Research</p>
+            <h2 id="research-title">Questions worth measuring carefully.</h2>
+          </div>
+          <p>Research spanning scientific ML, recommendation systems, and structure-preserving feature selection.</p>
+        </div>
+
+        <div class="research-list">
+          <article class="research-item" data-reveal>
+            <div class="research-index">R/01</div>
+            <div class="research-body">
+              <p class="research-label">Lead author · Physics-informed neural networks</p>
+              <h3>Meta-learners and LLM-guided adaptive weighting for PINNs</h3>
+              <p>Introduced an LLM meta-controller that balances PDE-residual and boundary-condition losses using training history, validation trends, and stability diagnostics. Evaluated against fixed weighting and LBPINN across 100 pressure-gradient values and five seeds.</p>
+            </div>
+            <div class="research-glyph" aria-hidden="true"><span>∂</span><span>λ</span></div>
+          </article>
+
+          <article class="research-item" data-reveal>
+            <div class="research-index">R/02</div>
+            <div class="research-body">
+              <p class="research-label">Collaborative filtering · Comparative study</p>
+              <h3>Recommendation systems via approximate matrix factorization</h3>
+              <p>Co-authored a comparison of six matrix-factorization methods, examining RMSE, convergence, and sensitivity to rank and regularization.</p>
+              <a href="/research/recommendation-systems-report.pdf" target="_blank">Read the report <span aria-hidden="true">↗</span></a>
+            </div>
+            <div class="research-glyph" aria-hidden="true"><span>U</span><span>Vᵀ</span></div>
+          </article>
+
+          <article class="research-item" data-reveal>
+            <div class="research-index">R/03</div>
+            <div class="research-body">
+              <p class="research-label">Optimization · Feature selection</p>
+              <h3>Software-engineering metrics selection with EO and DE</h3>
+              <p>Implemented the Equilibrium Optimizer to identify compact metric subsets while preserving geometric relationships. Sammon error and Kruskal stress guided evaluation; the study reduced 30 metrics to five.</p>
+              <a href="https://github.com/dayveedaniel/ASE_Project_team_3/tree/main" target="_blank" rel="noreferrer">View source repository <span aria-hidden="true">↗</span></a>
+            </div>
+            <div class="research-glyph" aria-hidden="true"><span>30</span><span>05</span></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section experience-section" id="experience" aria-labelledby="experience-title">
+        <div class="section-heading" data-reveal>
+          <div>
+            <p class="section-index">03 / Experience</p>
+            <h2 id="experience-title">Research depth. Production discipline.</h2>
+          </div>
+          <p>Roles across product engineering, data infrastructure, model development, and applied research.</p>
+        </div>
+
+        <div class="timeline">
+          <article class="timeline-item" data-reveal>
+            <div class="timeline-date">Sep 2022 — Present</div>
+            <div class="timeline-marker" aria-hidden="true"><span></span></div>
+            <div class="timeline-copy">
+              <p>PRAAMS</p>
+              <h3>Senior Software Developer</h3>
+              <p>Leading architecture and development of an AI-powered co-investor app combining conversational AI, stock analysis, and interactive financial visualizations. Conducting technical interviews and onboarding engineers.</p>
+            </div>
+          </article>
+          <article class="timeline-item" data-reveal>
+            <div class="timeline-date">Jun 2026 — Nov 2026</div>
+            <div class="timeline-marker" aria-hidden="true"><span></span></div>
+            <div class="timeline-copy">
+              <p>Bellissimo Pizza</p>
+              <h3>ML / Data Engineering Consultant</h3>
+              <p>Building automated ingestion, transformation, training-data preparation, and retraining workflows for demand and price prediction.</p>
+            </div>
+          </article>
+          <article class="timeline-item" data-reveal>
+            <div class="timeline-date">Aug 2025 — Sep 2026</div>
+            <div class="timeline-marker" aria-hidden="true"><span></span></div>
+            <div class="timeline-copy">
+              <p>Innopolis University</p>
+              <h3>Student Researcher</h3>
+              <p>Implemented and trained ML/RL models in PyTorch and built web-scraping and big-data analysis pipelines with MongoDB, PySpark, and Hadoop.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="education" data-reveal>
+          <div class="education-intro">
+            <p class="section-index">Education</p>
+            <p>Formal training in AI, data engineering, and software systems.</p>
+          </div>
+          <article>
+            <span>2024 — 2026</span>
+            <h3>MSc, Artificial Intelligence &amp; Data Engineering</h3>
+            <p>Innopolis University · CGPA 4.24</p>
+          </article>
+          <article>
+            <span>2019 — 2024</span>
+            <h3>BEng, Software Engineering</h3>
+            <p>Tomsk Polytechnic University · CGPA 3.85</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="contact-section" id="contact" aria-labelledby="contact-title">
+        <div class="contact-noise" aria-hidden="true"></div>
+        <div class="contact-copy" data-reveal>
+          <p class="section-index">04 / Contact</p>
+          <h2 id="contact-title">Have a difficult data or model problem?</h2>
+          <p>I’m always interested in thoughtful ML systems, reproducible research, and ambitious engineering work.</p>
+        </div>
+        <div class="contact-actions" data-reveal>
+          <a class="contact-email" href="mailto:dayveed.d@gmail.com">dayveed.d@gmail.com <span aria-hidden="true">↗</span></a>
+          <button class="copy-button" type="button" data-copy-email>Copy email</button>
+          <p class="copy-status" aria-live="polite" data-copy-status></p>
+        </div>
+        <div class="contact-links" data-reveal>
+          <a href="https://github.com/dayveedaniel" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+          <a href="https://www.linkedin.com/in/dayveedaniel" target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
+          <a href="https://huggingface.co/dayveedd" target="_blank" rel="noreferrer">Hugging Face <span aria-hidden="true">↗</span></a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>© <span data-year></span> Daniel David</p>
+      <p>English · Russian</p>
+      <a href="#top">Back to top ↑</a>
+    </footer>
+
+    <script src="/script.js" defer></script>
+  </body>
+</html>
