@@ -1,15 +1,24 @@
-// Article copy is based on the résumé and the corresponding files in reports/.
+// Article copy draws on supplied project notes, the résumé, and files in reports/.
 // Keep unavailable reports null until a matching source is supplied.
 export const projects = [
   {
-    slug: "multilingual-math", title: "Multilingual math reasoning", category: "Data · Evaluation", section: "projects",
-    summary: "Translating GSM8K into Igbo, Hausa, and Yoruba to study mathematical reasoning in low-resource languages.",
+    slug: "multilingual-math", title: "Multilingual math reasoning", category: "SFT data · Evaluation", section: "projects",
+    summary: "Building an SFT dataset for mathematical reasoning in local African languages (Igbo, Hausa, and Yoruba).",
     report: null,
     links: [{ label: "Explore the dataset", href: "https://huggingface.co/datasets/dayveedd/gsm8k-lowres-math" }],
-    body: `<p>A model that solves a maths problem in English may struggle with the same problem in another language. This project explores that gap for Igbo, Hausa, and Yoruba, using translated problems from GSM8K.</p>
-      <h2>Building the dataset</h2><p>I translated the dataset into the three languages and evaluated Qwen and Tiny Aya models for supervised fine-tuning. The work brings dataset preparation and model evaluation together around a concrete task: understanding a word problem and producing a mathematical answer.</p>
-      <h2>Why it matters</h2><p>Mathematical reasoning provides a useful way to examine language coverage beyond fluent text generation. The released dataset makes these translated tasks available for further experiments.</p>
-      <p>This overview covers the work described in my résumé. A detailed report and benchmark results will be added when available.</p>`
+    body: `<p>The goal of this project is to build a supervised fine-tuning (SFT) dataset that helps models reason through maths problems in local African languages (Igbo, Hausa, and Yoruba). I translated GSM8K problems into these languages and used an evaluation harness to measure solver behavior and identify harder questions.</p>
+      <h2>Building and evaluating the dataset</h2><p>The translated questions retain GSM8K’s canonical numeric answers as their ground truth. Codex / GPT-5.5 and OpenRouter’s <code>tencent/hy3</code> were used for translation. The three scored math solvers are listed below.</p>
+      <div class="table-scroll"><table class="model-table"><caption>Models and evaluation configurations</caption><thead><tr><th scope="col">Model</th><th scope="col">Backend</th><th scope="col">Evaluation scope</th></tr></thead><tbody>
+      <tr><th scope="row"><code>Qwen/Qwen2.5-1.5B-Instruct</code></th><td>vLLM · NVIDIA</td><td>Igbo and Yoruba, <code>igbo_yoruba_first_50</code>; 1 sample per question.</td></tr>
+      <tr><th scope="row"><code>CohereLabs/tiny-aya-global</code></th><td>MLX · Apple Silicon</td><td>Several slices, including the full Igbo, Hausa, and Yoruba set with 16 samples per question.</td></tr>
+      <tr><th scope="row"><code>CohereLabs/tiny-aya-earth</code></th><td>MLX · Apple Silicon</td><td>The full three-language set with 1 sample per question, as a comparison with Global.</td></tr>
+      </tbody></table></div>
+      <h2>Strict final-answer scoring</h2><p>Each model is prompted in the target language to finish with <code>#### &lt;answer&gt;</code>. The harness extracts the number from the last <code>####</code> answer marker and compares it with GSM8K’s <code>canonical_final_answer</code>. A response that says “the answer is 8” but omits <code>#### 8</code> is counted incorrect; unmarked numbers in the reasoning do not count.</p>
+      <p>Before comparison, both values are normalized by stripping dollar signs, thousands commas, and wrapping punctuation, and evaluating fractions—for example, <code>1/2</code> and <code>0.5</code> match. The metric is strict exact-match accuracy: the number of correct answers divided by the number scored, reported overall and by language.</p>
+      <p>The CLI also reports parse rate—the fraction of generations with a numeric <code>####</code> answer—and truncation rate, where <code>finish_reason == length</code>. These help diagnose output failures; exact-match accuracy is the ranking metric.</p>
+      <h2>Finding harder questions</h2><p>For <code>tiny_aya_global_full_x16</code>, Tiny Aya Global generates 16 samples per question at temperature 0.9, each with a distinct seed. The fraction answered correctly, <code>n_correct / 16</code>, estimates that question’s difficulty for the model.</p>
+      <p>Questions answered correctly on at least 7 of the 16 trials are treated as easy and removed from the hard test split. The retained split, <code>igbo_yoruba_hausa_test_codex_hard_lt7of16</code>, contains questions with fewer than 7 correct trials. Tiny Aya Earth supplies the single-sample counterpart to this probe.</p>
+      <p>This connects dataset preparation with evaluation: an SFT resource for the three languages, alongside a harder test split for examining mathematical reasoning.</p>`
   },
   {
     slug: "nanotitan", title: "nanoTitan", category: "PyTorch · MoE", section: "projects",

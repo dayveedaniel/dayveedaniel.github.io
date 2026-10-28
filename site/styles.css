@@ -232,6 +232,8 @@ main { margin-left: var(--sidebar-width); }
 .article-body th, .article-body td { padding: 10px 8px; border-bottom: 1px solid var(--line); text-align: right; }
 .article-body th:first-child { text-align: left; }
 .article-body tbody th { font-weight: 400; }
+.article-body code { font-family: var(--mono); font-size: .85em; overflow-wrap: anywhere; }
+.article-body .model-table th, .article-body .model-table td { text-align: left; vertical-align: top; }
 
 @media (max-width: 900px) {
   :root { --sidebar-width: 0px; }
