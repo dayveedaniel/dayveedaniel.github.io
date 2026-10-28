@@ -40,7 +40,7 @@ for (const project of projects) {
   for (const file of reports) await cp(resolve(root, "reports", file.source), resolve(output, "reports", file.file));
   const resources = [
     ...(reports.length ? reports.map((file) => `<a href="/reports/${file.file}" download>Download ${escape(file.label ?? (file.manuscript ? "manuscript (.tex)" : "report (PDF)"))} ↓</a>`)
-      : ['<span class="report-unavailable">Report not yet available</span>']),
+      : []),
     ...(project.links ?? []).map((link) => `<a href="${escape(link.href)}" target="_blank" rel="noreferrer">${escape(link.label)} ↗</a>`)
   ].join("\n");
   const words = project.body.replace(/<[^>]*>/g, " ").split(/\s+/).length;
@@ -71,7 +71,7 @@ for (const project of projects) {
           <p class="article-meta">${escape(project.category)} · ${Math.max(1, Math.ceil(words / 220))} min read</p>
           <h1>${title}${badge(project)}</h1>
           <p class="article-deck">${escape(project.summary)}</p>
-          <div class="article-resources">${resources}</div>
+          ${resources ? `<div class="article-resources">${resources}</div>` : ""}
           ${report?.manuscript ? `<p class="article-note">${escape(report.note ?? "LaTeX manuscript source; a compiled PDF is not yet available.")}</p>` : ""}
         </header>
         <div class="article-body">${project.body}</div>
