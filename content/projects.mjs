@@ -21,11 +21,18 @@ export const projects = [
   },
   {
     slug: "nanotitan", title: "nanoTitan", category: "PyTorch · MoE · Distributed training · GPU parallelism", section: "projects",
-    summary: "Ongoing collaboration on an open-source LLM training framework, with contributions to attention and normalization.", report: null,
-    links: [{ label: "Read Israel Adewuyi’s write-up", href: "https://israel-adewuyi.github.io/blog/2026/distributed/" }],
-    body: `<p><strong>nanoTitan is an ongoing collaboration</strong> on an open-source LLM training framework with a mixture-of-experts stack.</p>
-      <h2>Contributions so far</h2><p>I added PyTorch scaled dot-product attention (SDPA) with an eager fallback, fused query, key, and value projections, and RMSNorm.</p>
-      <h2>Next steps</h2><p>We plan to explore tensor parallelism and optimizer-state sharding, and maintain support for evolving LLM architectures using RoPE, RMSNorm, and FlashAttention. I also plan to develop custom GPU kernels to improve speed and memory efficiency, validating numerical correctness and profiling performance.</p>`
+    summary: "Ongoing collaboration on an educational LLM training framework, with handwritten RoPE and RMSNorm implementations and custom attention kernels planned next.", report: null,
+    links: [
+      { label: "View nanoTitan on GitHub", href: "https://github.com/israel-adewuyi/nanoTitan" },
+      { label: "Read Israel Adewuyi’s write-up", href: "https://israel-adewuyi.github.io/blog/2026/distributed/" }
+    ],
+    body: `<p><strong>nanoTitan is an ongoing collaboration</strong> on an educational, open-source LLM training framework with a mixture-of-experts stack. The aim is to learn how model components, distributed execution, and GPU kernels work by implementing them ourselves.</p>
+      <h2>Learning through implementation</h2><p>Much of the code is handwritten so we can follow the operations, data movement, and synchronization that make training work. The framework provides a place to connect model-level ideas with their execution on GPUs, experiment with alternatives, and understand the trade-offs through correctness tests and profiling.</p>
+      <h2>My contributions so far</h2><p>I implemented <strong>rotary positional embeddings (RoPE)</strong> and <strong>RMSNorm</strong>. These are my completed contributions to the model components; custom attention kernels are the next stage of my work.</p>
+      <p>Implementing these components by hand is part of the learning process: tracing the tensor operations, understanding their role in the model, and keeping the implementation readable enough to inspect and extend.</p>
+      <h2>The wider framework</h2><p>The shared repository includes data, pipeline, and expert parallelism, alongside mixture-of-experts routing and CUDA implementations for token dispatch and combination. It also contains distributed correctness tests, kernel microbenchmarks, and profiling utilities. These provide the surrounding framework for our ongoing contributions and experiments.</p>
+      <h2>Next steps</h2><p>My immediate goal is to write <strong>custom GPU kernels for scaled dot-product attention</strong>, then work on a <strong>FlashAttention implementation</strong>. I want to understand and optimize the underlying operations, with forward and backward correctness checks and measurements of runtime and memory use against reference implementations.</p>
+      <p>Longer term, we plan to explore tensor parallelism and optimizer-state sharding, while keeping the framework adaptable to evolving LLM architectures. The educational purpose remains central: implement, test, profile, and learn from the results.</p>`
   },
   {
     slug: "ecg-benchmarking", title: "A Comparative Study of Signal Processing and Machine Learning Algorithms for Atrial Fibrillation Detection in Long-Term ECG Monitoring", category: "Data engineering · Time series · Signal processing · PySpark", badge: "MSc thesis", section: "projects",
