@@ -1,14 +1,38 @@
 # Daniel David — Portfolio
 
-A fast, accessible portfolio and research site built with plain HTML, CSS, and JavaScript. The generated `dist/` directory is ready for Cloudflare Pages or any static host.
+A static portfolio and research site built with plain HTML, CSS, and JavaScript, hosted on GitHub Pages. No Cloudflare account or server is required.
+
+Site: https://dayveedaniel.github.io/personal-blog/
 
 ## Build
 
 ```bash
 npm run build
+npm run check
 ```
 
-For Cloudflare Pages, use `npm run build` as the build command and `dist` as the output directory.
+Use Node.js 24. There are no package dependencies to install. The output is `dist/`.
+
+## Deployment
+
+In the repository's **Settings → Pages**, select **GitHub Actions** as the source.
+The workflow in `.github/workflows/pages.yml` builds, checks, and publishes the site
+after each push to `main`. It can also be run manually from the Actions tab.
+Only `dist/` is deployed; source files and original reports remain in the repository.
+
+The workflow uses GitHub's Pages URL automatically. `site.config.mjs` supplies the
+default URL for local builds; override `SITE_URL` for another host or a custom domain.
+The build handles repository subpaths, canonical URLs, the sitemap, and downloads.
+
+## Local preview
+
+```bash
+SITE_URL=http://127.0.0.1:4173/ npm run build
+SITE_URL=http://127.0.0.1:4173/ npm run check
+python3 -m http.server 4173 --bind 127.0.0.1 --directory dist
+```
+
+Run `npm run build` again to restore the default GitHub Pages build.
 
 ## Content
 

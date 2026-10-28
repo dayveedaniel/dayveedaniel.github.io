@@ -2,6 +2,7 @@ import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { projects } from "../content/projects.mjs";
 import { futureResearch } from "../content/future-research.mjs";
+import { siteUrl } from "../site.config.mjs";
 
 const articles = [...projects, ...futureResearch];
 
@@ -13,8 +14,12 @@ await mkdir(output, { recursive: true });
 await cp(resolve(root, "site"), output, { recursive: true });
 await cp(resolve(root, "public"), output, { recursive: true });
 
-const template = await readFile(resolve(root, "site/index.html"), "utf8");
-const origin = new URL(template.match(/rel="canonical" href="([^"]+)"/)[1]).origin;
+const template = (await readFile(resolve(root, "site/index.html"), "utf8")).replaceAll("{{SITE_URL}}", siteUrl.href);
+const basePath = siteUrl.pathname.replace(/\/$/, "");
+const publicPath = (path) => `${basePath}${path}`;
+const absoluteUrl = (path) => new URL(path.replace(/^\//, ""), siteUrl).href;
+// Source HTML uses root-relative links; deployment may live under a repository path.
+const deployHtml = (html) => html.replace(/(href|src)="\/(?!\/)/g, `$1="${basePath}/`);
 const escape = (value) => value.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 const articlePath = (project) => `/${project.section}/${project.slug}/`;
 const badge = (project) => project.badge ? ` <span class="project-badge">${escape(project.badge)}</span>` : "";
@@ -25,10 +30,10 @@ const entries = (section) => articles.filter((project) => project.section === se
     <div class="entry-side"><span>${escape(project.category)}</span><a href="${articlePath(project)}" aria-label="Read ${escape(project.title)}">↗</a></div>
   </article>`).join("\n");
 
-await writeFile(resolve(output, "index.html"), template
+await writeFile(resolve(output, "index.html"), deployHtml(template
   .replace("<!-- PROJECT_ENTRIES -->", entries("projects"))
   .replace("<!-- RESEARCH_ENTRIES -->", entries("research"))
-  .replace("<!-- FUTURE_RESEARCH_ENTRIES -->", entries("future-research")));
+  .replace("<!-- FUTURE_RESEARCH_ENTRIES -->", entries("future-research"))));
 
 const sidebar = template.match(/<aside class="sidebar"[\s\S]*?<\/aside>/)[0]
   .replaceAll('href="#', 'href="/#');
@@ -62,8 +67,8 @@ for (const project of articles) {
     <meta property="og:type" content="article" />
     <meta property="og:title" content="${title}" />
     <meta property="og:description" content="${escape(project.summary)}" />
-    <meta property="og:url" content="${origin}${articlePath(project)}" />
-    <link rel="canonical" href="${origin}${articlePath(project)}" />
+    <meta property="og:url" content="${absoluteUrl(articlePath(project))}" />
+    <link rel="canonical" href="${absoluteUrl(articlePath(project))}" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/styles.css" />
     <script src="/navigation.js" defer></script>
@@ -90,22 +95,24 @@ for (const project of articles) {
 </html>`;
   const directory = resolve(output, project.section, project.slug);
   await mkdir(directory, { recursive: true });
-  await writeFile(resolve(directory, "index.html"), page);
+  await writeFile(resolve(directory, "index.html"), deployHtml(page));
   // Keep bookmarked article URLs working on any static host.
   for (const alias of project.aliases ?? []) {
     const aliasDirectory = resolve(output, project.section, alias);
     await mkdir(aliasDirectory, { recursive: true });
-    await writeFile(resolve(aliasDirectory, "index.html"), `<!doctype html>
+    await writeFile(resolve(aliasDirectory, "index.html"), deployHtml(`<!doctype html>
 <html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>${title} — Daniel David</title><meta name="robots" content="noindex" />
-<link rel="canonical" href="${origin}${articlePath(project)}" />
-<meta http-equiv="refresh" content="0;url=${articlePath(project)}" /></head>
-<body><p>This article has moved to <a href="${articlePath(project)}">${title}</a>.</p></body></html>`);
+<link rel="canonical" href="${absoluteUrl(articlePath(project))}" />
+<meta http-equiv="refresh" content="0;url=${publicPath(articlePath(project))}" /></head>
+<body><p>This article has moved to <a href="${articlePath(project)}">${title}</a>.</p></body></html>`));
   }
 }
 
 await writeFile(resolve(output, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${["/", ...articles.map(articlePath)].map((path) => `  <url><loc>${origin}${path}</loc></url>`).join("\n")}
+${["/", ...articles.map(articlePath)].map((path) => `  <url><loc>${absoluteUrl(path)}</loc></url>`).join("\n")}
 </urlset>\n`);
+await writeFile(resolve(output, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${absoluteUrl("/sitemap.xml")}\n`);
+await writeFile(resolve(output, ".nojekyll"), "");
 console.log(`Built static site with ${articles.length} articles in dist/`);

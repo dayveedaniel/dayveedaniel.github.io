@@ -4,6 +4,7 @@
   "private": true,
   "description": "Portfolio and research site for Daniel David.",
   "scripts": {
-    "build": "node scripts/build.mjs"
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check-site.mjs"
   }
 }
