@@ -2,7 +2,9 @@
 
 A static portfolio and research site built with plain HTML, CSS, and JavaScript, hosted on GitHub Pages. No Cloudflare account or server is required.
 
-Site: https://dayveedaniel.github.io/personal-blog/
+Site: https://dayveedaniel.github.io/
+
+Repository: https://github.com/dayveedaniel/dayveedaniel.github.io
 
 ## Build
 
