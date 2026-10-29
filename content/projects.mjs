@@ -3,6 +3,7 @@
 export const projects = [
   {
     slug: "multilingual-math", title: "Multilingual math reasoning", category: "Synthetic data · SFT · Eval", section: "projects",
+    date: "2026-07",
     summary: "Synthetic data generation for SFT in local African languages (Igbo, Hausa, and Yoruba), with evaluation to identify harder maths questions.",
     report: null,
     links: [{ label: "Explore the CSV dataset", href: "https://huggingface.co/datasets/dayveedd/gsm8k-lowres-math" }],

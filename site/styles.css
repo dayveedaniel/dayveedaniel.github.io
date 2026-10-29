@@ -154,12 +154,12 @@ main { margin-left: var(--sidebar-width); }
 .entry-list { border-top: 1px solid var(--ink); }
 .entry {
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) 175px;
+  grid-template-columns: 64px minmax(0, 1fr) 175px;
   gap: 20px;
   padding: 27px 0;
   border-bottom: 1px solid var(--line);
 }
-.entry-index { padding-top: 4px; color: var(--red); font: 11px var(--mono); }
+.entry-date { padding-top: 4px; color: var(--red); font: 11px var(--mono); white-space: nowrap; }
 .entry h3 { margin: 0; font-family: var(--serif); font-size: 26px; line-height: 1.15; font-weight: 400; letter-spacing: -.02em; }
 .entry h3 a { text-decoration: none; }
 .entry h3 a:hover, .entry h3 a:focus-visible { color: var(--blue); text-decoration: underline; text-underline-offset: 4px; }
@@ -177,7 +177,6 @@ main { margin-left: var(--sidebar-width); }
   white-space: nowrap;
 }
 .entry p { max-width: 650px; margin: 8px 0 0; color: var(--muted); font-size: 14px; }
-.entry p.entry-date { margin-top: 6px; font: 11px/1.7 var(--mono); }
 .entry-side { display: flex; align-items: flex-end; flex-direction: column; gap: 8px; padding-top: 5px; text-align: right; }
 .entry-side span { color: var(--muted); font: 10px/1.65 var(--mono); text-transform: uppercase; letter-spacing: .04em; }
 .entry-side a { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; color: var(--blue); font-size: 27px; line-height: 1; text-decoration: none; }
@@ -269,7 +268,7 @@ main { margin-left: var(--sidebar-width); }
   .intro h1 { font-size: clamp(4.1rem, 22vw, 6.4rem); }
   .intro-copy { margin-top: 28px; font-size: 18px; }
   .section-header h2 { font-size: clamp(3.5rem, 18vw, 5.7rem); }
-  .entry { grid-template-columns: 30px minmax(0, 1fr); gap: 12px; }
+  .entry { grid-template-columns: 64px minmax(0, 1fr); gap: 12px; }
   .entry-side { grid-column: 2; align-items: center; justify-content: space-between; flex-direction: row; flex-wrap: wrap; text-align: left; }
   .cv-header { align-items: flex-start; flex-direction: column; }
   .resume-link { margin: 0; }
