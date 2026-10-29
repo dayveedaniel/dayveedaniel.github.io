@@ -159,7 +159,8 @@ main { margin-left: var(--sidebar-width); }
   padding: 27px 0;
   border-bottom: 1px solid var(--line);
 }
-.entry-date { padding-top: 4px; color: var(--red); font: 11px var(--mono); white-space: nowrap; }
+.entry-index { padding-top: 4px; color: var(--red); font: 11px var(--mono); }
+.entry-date { white-space: nowrap; }
 .entry h3 { margin: 0; font-family: var(--serif); font-size: 26px; line-height: 1.15; font-weight: 400; letter-spacing: -.02em; }
 .entry h3 a { text-decoration: none; }
 .entry h3 a:hover, .entry h3 a:focus-visible { color: var(--blue); text-decoration: underline; text-underline-offset: 4px; }

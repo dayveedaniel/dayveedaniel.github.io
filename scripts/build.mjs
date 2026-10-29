@@ -1,5 +1,6 @@
 import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { createHash } from "node:crypto";
 import { projects } from "../content/projects.mjs";
 import { futureResearch } from "../content/future-research.mjs";
 import { siteUrl } from "../site.config.mjs";
@@ -14,19 +15,26 @@ await mkdir(output, { recursive: true });
 await cp(resolve(root, "site"), output, { recursive: true });
 await cp(resolve(root, "public"), output, { recursive: true });
 
+// Give changed styles a new URL so cached CSS cannot mismatch freshly deployed HTML.
+const styles = await readFile(resolve(root, "site/styles.css"));
+const stylesheet = `styles.${createHash("sha256").update(styles).digest("hex").slice(0, 12)}.css`;
+await writeFile(resolve(output, stylesheet), styles);
+
 const template = (await readFile(resolve(root, "site/index.html"), "utf8")).replaceAll("{{SITE_URL}}", siteUrl.href);
 const basePath = siteUrl.pathname.replace(/\/$/, "");
 const publicPath = (path) => `${basePath}${path}`;
 const absoluteUrl = (path) => new URL(path.replace(/^\//, ""), siteUrl).href;
 // Source HTML uses root-relative links; deployment may live under a repository path.
-const deployHtml = (html) => html.replace(/(href|src)="\/(?!\/)/g, `$1="${basePath}/`);
+const deployHtml = (html) => html
+  .replaceAll('href="/styles.css"', `href="/${stylesheet}"`)
+  .replace(/(href|src)="\/(?!\/)/g, `$1="${basePath}/`);
 const escape = (value) => value.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 const articlePath = (project) => `/${project.section}/${project.slug}/`;
 const badge = (project) => project.badge ? ` <span class="project-badge">${escape(project.badge)}</span>` : "";
 const dateLabel = (project, month = "long") => project.date ? `<time datetime="${escape(project.date)}">${new Intl.DateTimeFormat("en-GB", { month, year: "numeric", timeZone: "UTC" }).format(new Date(`${project.date}-01T00:00:00Z`))}</time>` : "";
 const entries = (section) => articles.filter((project) => project.section === section).map((project) => `
   <article class="entry">
-    <span class="entry-date">${dateLabel(project, "short")}</span>
+    <span class="entry-index entry-date">${dateLabel(project, "short")}</span>
     <div><h3><a href="${articlePath(project)}">${escape(project.title)}</a>${badge(project)}</h3><p>${escape(project.summary)}</p></div>
     <div class="entry-side"><span>${escape(project.category)}</span><a href="${articlePath(project)}" aria-label="Read ${escape(project.title)}">↗</a></div>
   </article>`).join("\n");
