@@ -36,6 +36,7 @@ export const projects = [
   },
   {
     slug: "ecg-benchmarking", title: "A Comparative Study of Signal Processing and Machine Learning Algorithms for Atrial Fibrillation Detection in Long-Term ECG Monitoring", category: "Data engineering · Time series · Signal processing · PySpark", badge: "MSc thesis", section: "projects",
+    date: "2026-06",
     summary: "A dataset-agnostic ECG preparation framework: configurable source adapters, signal and annotation harmonization, and a shared data contract for downstream analysis and benchmarking.",
     report: { source: "Thesis_final.pdf", file: "ecg-msc-thesis.pdf", label: "MSc thesis (PDF)" },
     links: [
@@ -78,6 +79,7 @@ export const projects = [
   },
   {
     slug: "advanced-agentic-ai", title: "Agent-inspired RAG", category: "LLMs · Retrieval", section: "projects",
+    date: "2025-07",
     aliases: ["llm-project"],
     summary: "A local knowledge assistant with query rewriting, hybrid retrieval, and evidence-based answer generation.",
     report: { source: "AAI Project_report with gitlink.pdf", file: "advanced-agentic-ai.pdf", label: "Agent-inspired RAG report (PDF)" },
@@ -93,6 +95,7 @@ export const projects = [
   },
   {
     slug: "kinship-recognition", title: "Kinship recognition", category: "Multimodal ML", section: "projects",
+    date: "2025-05",
     summary: "Finding candidate family connections through face and name embeddings, with explainable predictions.",
     report: { source: "AML_team_project_report.pdf", file: "kinship-recognition.pdf" },
     body: `<p>Our team explored whether face images and names could help retrieve candidate family connections from the Families in the Wild dataset. The prototype combines vector search, classification, and visual explanations in a single workflow.</p>
@@ -104,6 +107,7 @@ export const projects = [
   },
   {
     slug: "highway-reinforcement-learning", title: "Reinforcement learning for highway driving", category: "RL · Evaluation", section: "projects",
+    date: "2025-03",
     summary: "Comparing four driving agents—and finding out why fewer collisions can hide the wrong behavior.",
     report: { source: "rl_project.pdf", file: "highway-reinforcement-learning.pdf" },
     body: `<p>A driving agent can improve its reward without learning the behavior we actually want. In this project, our team compared DQN, PPO, TD3, and SAC in the highway-env simulator and examined both their learning curves and their driving behavior.</p>
@@ -115,7 +119,7 @@ export const projects = [
       <p class="article-note">Team project with Kelvin Asu Ekuri, Danil Afonchikov, and Ivan Kiselyov.</p>`
   },
   {
-    slug: "software-metrics", title: "Selecting software-engineering metrics", category: "Published · Springer 2026", section: "research",
+    slug: "software-metrics", title: "Selecting software-engineering metrics", category: "Published · Springer", section: "research",
     summary: "Finding a smaller set of metrics while preserving the geometric relationships in the original data.",
     report: { source: "AMSTA25-21/AMSTA25-21.tex", file: "software-metrics.tex", manuscript: true, note: "The download is the LaTeX manuscript source. The published chapter is available through Springer." },
     links: [
@@ -128,10 +132,11 @@ export const projects = [
       <h2>What the manuscript reports</h2><p>In the studied setting, EO reduced 30 metrics to five. The manuscript reports Sammon Error below 0.1 in 85% of EO runs and describes DE as another effective route to compact subsets.</p>
       <h2>Why this is useful</h2><p>Keeping original metrics, rather than replacing them entirely with latent components, can make the reduced dataset easier to interpret. Preserving geometric structure is the objective tested here; it does not by itself establish better downstream prediction accuracy.</p>
       <h2>Publication</h2><p>Marina Kotelevskaya, Daniel David, Nikita Yaneev, and Zamira Kholmatova. <cite>Software Engineering Metrics Selection Using Equilibrium Optimizer and Differential Evolution.</cite> In <cite>Agents and Multi-agent Systems: Technologies and Applications 2025</cite> (KES AMSTA 2025), Smart Innovation, Systems and Technologies, volume 464, pages 359–368. Springer, 2026.</p>
-      <p class="article-note">First published online <time datetime="2026-10-06">6 October 2026</time>. DOI: <a href="https://doi.org/10.1007/978-3-032-11456-3_30">10.1007/978-3-032-11456-3_30</a>.</p>`
+      <p class="article-note">DOI: <a href="https://doi.org/10.1007/978-3-032-11456-3_30">10.1007/978-3-032-11456-3_30</a>.</p>`
   },
   {
     slug: "llm-guided-pinns", title: "LLM-guided weighting for physics-informed neural networks", category: "Scientific ML · Lead author", section: "research",
+    date: "2025-10",
     summary: "Using a language model to adjust the balance between physics and boundary-condition losses during training.",
     report: { source: "meta-learners.tex", file: "llm-guided-pinns.tex", manuscript: true },
     body: `<p>Physics-informed neural networks learn solutions that must satisfy both a governing equation and boundary conditions. Those objectives can compete during training. In this lead-authored study, I explored whether a language model could help choose their relative weights.</p>
@@ -142,6 +147,7 @@ export const projects = [
   },
   {
     slug: "matrix-factorization", title: "Recommendation systems via matrix factorization", category: "Collaborative filtering", section: "research",
+    date: "2024-11",
     summary: "Comparing six optimization methods for reconstructing a sparse preference matrix.",
     report: { source: "HDDA_report.pdf", file: "matrix-factorization.pdf" },
     body: `<p>Recommendation systems often start with an incomplete matrix: users have expressed preferences for some items, but most entries are unknown. Matrix factorization represents users and items through smaller latent vectors, whose products approximate those observed preferences.</p>

@@ -2,6 +2,7 @@
 export const futureResearch = [
   {
     slug: "afridataforge", title: "AfriDataForge: African-language data and model adaptation",
+    date: "2026-05",
     category: "African languages · Synthetic data · SFT", badge: "WIP", section: "future-research", report: null,
     proposal: "afridataforge_african_languages_research_direction.md",
     summary: "A proposed pipeline for generating, validating, and using synthetic data to adapt models for underrepresented African languages.",
@@ -13,6 +14,7 @@ export const futureResearch = [
   },
   {
     slug: "heterogeneous-gpu-execution", title: "Hardware-agnostic PyTorch execution",
+    date: "2026-07",
     category: "GPU systems · Distributed training · Inference", badge: "WIP", section: "future-research", report: null,
     proposal: "hardware_agnostic_pytorch_future_research.md",
     summary: "Exploring a PyTorch execution layer that coordinates inference and training across mixed-vendor GPUs and CPUs.",
@@ -24,6 +26,7 @@ export const futureResearch = [
   },
   {
     slug: "llm-architecture-synthesis", title: "Beyond the standard Transformer",
+    date: "2026-09",
     category: "LLM architectures · Efficient modeling", section: "future-research", report: null,
     proposal: "llm_architecture_synthesis_research_direction.md",
     summary: "An architecture playground for implementing proposed LLM changes and testing them against a documented Transformer baseline.",
@@ -36,6 +39,7 @@ export const futureResearch = [
   },
   {
     slug: "beyond-softmax", title: "Beyond softmax: probabilistic embedding-space prediction",
+    date: "2026-10",
     category: "Language modeling · Probabilistic outputs", section: "future-research", report: null,
     proposal: "beyond_softmax_probabilistic_embedding_space_language_modeling.md",
     summary: "Investigating continuous and probabilistic output heads as alternatives to vocabulary-wide next-token classification.",

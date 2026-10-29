@@ -23,10 +23,11 @@ const deployHtml = (html) => html.replace(/(href|src)="\/(?!\/)/g, `$1="${basePa
 const escape = (value) => value.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 const articlePath = (project) => `/${project.section}/${project.slug}/`;
 const badge = (project) => project.badge ? ` <span class="project-badge">${escape(project.badge)}</span>` : "";
+const dateLabel = (project) => project.date ? `<time datetime="${escape(project.date)}">${new Intl.DateTimeFormat("en-GB", { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${project.date}-01T00:00:00Z`))}</time>` : "";
 const entries = (section) => articles.filter((project) => project.section === section).map((project, index) => `
   <article class="entry">
     <span class="entry-index">${String(index).padStart(2, "0")}</span>
-    <div><h3><a href="${articlePath(project)}">${escape(project.title)}</a>${badge(project)}</h3><p>${escape(project.summary)}</p></div>
+    <div><h3><a href="${articlePath(project)}">${escape(project.title)}</a>${badge(project)}</h3>${project.date ? `<p class="entry-date">${dateLabel(project)}</p>` : ""}<p>${escape(project.summary)}</p></div>
     <div class="entry-side"><span>${escape(project.category)}</span><a href="${articlePath(project)}" aria-label="Read ${escape(project.title)}">↗</a></div>
   </article>`).join("\n");
 
@@ -80,7 +81,7 @@ for (const project of articles) {
       <article class="project-article">
         <a class="back-link" href="/#${project.section}">← All ${section.toLowerCase()}</a>
         <header class="article-header">
-          <p class="article-meta">${escape(project.category)} · ${Math.max(1, Math.ceil(words / 220))} min read</p>
+          <p class="article-meta">${project.date ? `${dateLabel(project)} · ` : ""}${escape(project.category)} · ${Math.max(1, Math.ceil(words / 220))} min read</p>
           <h1>${title}${badge(project)}</h1>
           <p class="article-deck">${escape(project.summary)}</p>
           ${resources ? `<div class="article-resources">${resources}</div>` : ""}
