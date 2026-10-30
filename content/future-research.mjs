@@ -13,7 +13,7 @@ export const futureResearch = [
       <h2>Intended outcome</h2><p>A reproducible data-to-model workflow, curated datasets, adaptation recipes, and evidence about when synthetic augmentation helps. These are proposed outputs; AfriDataForge is a working title.</p>`
   },
   {
-    slug: "heterogeneous-gpu-execution", title: "Hardware-agnostic PyTorch execution",
+    slug: "heterogeneous-gpu-execution", title: "Heterogeneous accelerator framework",
     date: "2026-07",
     category: "Accelerator systems · Distributed training · Inference", badge: "WIP", section: "future-research", report: null,
     proposal: "hardware_agnostic_pytorch_future_research.md",

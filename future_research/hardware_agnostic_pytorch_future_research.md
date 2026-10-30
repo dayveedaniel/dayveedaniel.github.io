@@ -1,4 +1,4 @@
-# Future Research Direction: Hardware-Agnostic and Heterogeneous Accelerator Execution for PyTorch
+# Heterogeneous accelerator framework
 
 *Research concept note — October 2026*
 
