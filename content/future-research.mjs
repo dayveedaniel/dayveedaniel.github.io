@@ -15,14 +15,20 @@ export const futureResearch = [
   {
     slug: "heterogeneous-gpu-execution", title: "Hardware-agnostic PyTorch execution",
     date: "2026-07",
-    category: "GPU systems · Distributed training · Inference", badge: "WIP", section: "future-research", report: null,
+    category: "Accelerator systems · Distributed training · Inference", badge: "WIP", section: "future-research", report: null,
     proposal: "hardware_agnostic_pytorch_future_research.md",
-    summary: "Exploring a PyTorch execution layer that coordinates inference and training across mixed-vendor GPUs and CPUs.",
-    body: `<p><strong>Work in progress.</strong> I’m investigating how a unified execution layer could discover available hardware, configure backend-specific workers, and schedule PyTorch workloads across heterogeneous accelerators.</p>
-      <h2>Research focus</h2><p>The proposed design separates hardware discovery, backend provisioning, tensor transport, and workload scheduling. Initial experiments would use separate CUDA and ROCm workers, with a longer-term goal of supporting NVIDIA, AMD, Intel, and CPU execution where compatible.</p>
-      <p>The scheduling problem must account for device memory, compute speed, network topology, and transfer costs. I want to compare independent inference-request placement with model partitioning, then investigate gradient exchange and collective communication for distributed training.</p>
-      <h2>Next experiments</h2><p>Start with reliable tensor exchange and inference across unlike devices. Add automatic placement, then test training with workers of unequal speed. Compare against single-vendor and manually configured heterogeneous baselines.</p>
-      <p>Evaluation would measure numerical correctness, throughput, latency, communication overhead, and peak memory. The goal is to identify when mixed hardware is useful and where backend compatibility or communication costs limit it.</p>`
+    summary: "Reducing accelerator compatibility barriers through a PyTorch execution layer for communication, placement, and distributed workloads across mixed hardware.",
+    body: `<p><strong>Work in progress.</strong> I’m exploring a framework that makes available accelerators easier to use together, reducing manual backend setup, device placement, and communication management. The long-term goal is a plug-and-play experience for supported workloads across a mixed-accelerator cluster.</p>
+      <h2>Research focus</h2><p>Start with NVIDIA GPUs (CUDA) and AMD GPUs (ROCm), then evaluate Huawei Ascend NPUs (<code>torch_npu</code>), Google TPUs (TorchTPU), Intel GPUs (XPU), Apple GPUs through Metal/MPS, and CPUs. Backend-specific worker processes would expose a common tensor and task interface; support would be established through experiments on available hardware.</p>
+      <p>Capability discovery would account for operators, dtypes, memory, device generation, and communication paths—not just vendor names. A transport layer would select verified device-direct paths where supported, or host-mediated exchange otherwise. The scheduler would use transfer costs and worker speed to place computation; a common interface would not imply shared device memory or universal operator support.</p>
+      <h2>Research roadmap</h2><ol>
+        <li><strong>Two GPUs, one tensor:</strong> exchange a tensor between CUDA and ROCm workers; verify correctness and transfer overhead.</li>
+        <li><strong>Basic collectives:</strong> implement or integrate cross-vendor Allreduce, starting with host-mediated communication and comparing existing approaches.</li>
+        <li><strong>One training step:</strong> synchronize gradients for a small network across NVIDIA and AMD workers; investigate communication/computation overlap.</li>
+        <li><strong>Hardware-aware scheduling:</strong> automate capability discovery, workload placement, and communication-path selection.</li>
+        <li><strong>Additional backends:</strong> evaluate Ascend, TPU, XPU, and Metal/MPS workers, subject to operator coverage, platform constraints, and hardware access.</li>
+      </ol>
+      <p>Evaluation would compare numerical correctness, convergence, throughput, latency, transfer overhead, and peak memory against single-vendor and manually configured heterogeneous baselines. The aim is to establish when mixed hardware helps, including the cost of fallbacks and synchronization.</p>`
   },
   {
     slug: "llm-architecture-synthesis", title: "Beyond the standard Transformer",
